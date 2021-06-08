@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/MyImage.hpp
+cstddef
+-
+string
+-
+vector
+-
+
+../io_tools/io_tools.hpp
+cstddef
+-
+string
+-
+vector
+-
+MyImage.hpp
+../io_tools/MyImage.hpp
+
+/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/src/MyImage.cpp
+io_tools.hpp
+/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/src/io_tools.hpp
+MyImage.hpp
+/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/src/MyImage.hpp
+iostream
+-
+
