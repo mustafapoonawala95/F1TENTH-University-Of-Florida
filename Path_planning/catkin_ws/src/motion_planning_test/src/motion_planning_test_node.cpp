@@ -245,8 +245,12 @@ int main(int argc, char **argv){
         ros::Duration(5).sleep();
     }
     std::cout << "Somebody subscribed to /dijkstra_shortest_path topic. \nPublishing one last time after 30 seconds and exiting.\n";
-    ros::Duration(30).sleep();
-    planner.publish_path();
+    ros::Duration(10).sleep();
+    for(int i=0;i<10;i++){
+        planner.publish_path();
+        ros::Duration(0.5).sleep();
+    }
+    
     
     return 0;
 }
