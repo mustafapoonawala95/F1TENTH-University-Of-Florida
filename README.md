@@ -6,12 +6,13 @@ The application asks for size of the map followed by option to generate multiple
 ![MapGenerator](https://user-images.githubusercontent.com/66659752/121116584-c8301f80-c7e4-11eb-8a15-9224a4354cfc.PNG)
 
 ## Dijkstra algorithm.
-Dijkstra's algorithm solves for the optimal path. Note that the number of nodes searched are 3891.
-![DijkstraOP4988](https://user-images.githubusercontent.com/66659752/121254657-8486f580-c878-11eb-8900-9d4caa3a693a.PNG)
-![dij4988](https://user-images.githubusercontent.com/66659752/121254576-6b7e4480-c878-11eb-9e18-2d336719cb08.PNG)
+Dijkstra's algorithm solves for the optimal path. Note that the number of nodes searched are 3927.
+![DijkstraOP484](https://user-images.githubusercontent.com/66659752/121966607-ecd44c00-cd3c-11eb-9c67-07eef583ec10.PNG)
+![Dij484](https://user-images.githubusercontent.com/66659752/121966652-01b0df80-cd3d-11eb-9981-e0c34c5ca261.PNG)
+
 
 ## A* algorithm.
-A* algorithm solves for the optimal path. Note that the number of nodes searched are 1494.
-![A_starOP4988](https://user-images.githubusercontent.com/66659752/121254839-bdbf6580-c878-11eb-9b65-c31b2b3992be.PNG)
-![AStar4988](https://user-images.githubusercontent.com/66659752/121254897-cb74eb00-c878-11eb-9426-25a28de2130f.PNG)
+A* algorithm solves for the optimal path. Note that the number of nodes searched are 3394.
+![A_starOP484](https://user-images.githubusercontent.com/66659752/121966680-0ecdce80-cd3d-11eb-896f-b62c85f27480.PNG)
+![AStar484](https://user-images.githubusercontent.com/66659752/121966718-1beabd80-cd3d-11eb-8a53-c5e6cdb7a2be.PNG)
 
