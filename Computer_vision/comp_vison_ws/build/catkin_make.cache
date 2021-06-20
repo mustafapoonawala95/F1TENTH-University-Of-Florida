@@ -1,0 +1,2 @@
+cv_basics:my_first_package
+-DCATKIN_DEVEL_PREFIX=/home/krishna/my_first_ws/devel -DCMAKE_INSTALL_PREFIX=/home/krishna/my_first_ws/install -G Unix Makefiles
