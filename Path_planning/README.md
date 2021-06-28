@@ -18,4 +18,4 @@ A* algorithm solves for the optimal path. Note that the number of nodes searched
 ![AStar484](https://user-images.githubusercontent.com/66659752/121966718-1beabd80-cd3d-11eb-8a53-c5e6cdb7a2be.PNG)
 
 ## RRT Vs A* algorithm. 
-/home/mustafa/F1TENTH_MotionPlanning/A_starVs_RRT.png
+
