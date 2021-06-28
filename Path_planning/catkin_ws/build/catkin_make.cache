@@ -1,2 +1,2 @@
-motion_planning_A_star:motion_planning_test
+motion_planning_A_star:motion_planning_RRT:motion_planning_test
 -DCATKIN_DEVEL_PREFIX=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/install -G Unix Makefiles

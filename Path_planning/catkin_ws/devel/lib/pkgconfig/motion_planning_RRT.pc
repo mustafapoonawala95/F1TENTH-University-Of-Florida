@@ -1,0 +1,8 @@
+prefix=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/devel
+
+Name: motion_planning_RRT
+Description: Description of motion_planning_RRT
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

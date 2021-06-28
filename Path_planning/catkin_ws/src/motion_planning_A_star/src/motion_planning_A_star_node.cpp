@@ -212,8 +212,8 @@ class A_star_planner {
         while(true)
         {
             path.push_back(prev[path.back()]);                           // Adding the parent of each index to path starting from destination.
-            if(path.back() == 0){
-                path.pop_back();                                         
+            if(path.back() == source_index){
+                //path.pop_back();                                         
                 break;
             }
 

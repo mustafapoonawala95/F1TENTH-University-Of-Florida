@@ -200,8 +200,7 @@ class dijkstra_planner {
         while(true)
         {
             path.push_back(prev[path.back()]);                           // Adding the parent of each index to path starting from destination.
-            if(path.back() == 0){
-                path.pop_back();                                         
+            if(path.back() == source_index){                                         
                 break;
             }
 
@@ -227,7 +226,15 @@ class dijkstra_planner {
         time_to_solve = ros::Time::now().toSec() - current_time; 
         ROS_INFO("Optimal path found using dijsktra's algorithm.\n");
         //ROS_INFO("Callback counter is: %d \n",callback_count);
-        
+
+
+        //===========================================================
+        //===================DEBUGGING===============================
+        //===========================================================
+        /*ROS_INFO("Printing first 50 elemtents of data array. \n");
+        for(int i=0;i<50;i++){                     
+            std::cout << "Element number " << i << " : " << int(map->data[i]) << "\n";
+        }*/
     }
 
 };

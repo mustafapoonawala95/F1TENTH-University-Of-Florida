@@ -132,6 +132,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/gtest/cmake_install.cmake")
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_A_star/cmake_install.cmake")
+  include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_RRT/cmake_install.cmake")
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/cmake_install.cmake")
 
 endif()
