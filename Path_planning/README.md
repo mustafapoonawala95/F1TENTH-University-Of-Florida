@@ -19,12 +19,12 @@ A* algorithm solves for the optimal path. Note that the number of nodes searched
 ![](images/A_starVs_RRT.png)
 
 ## RRT Vs RRT*
-RRT*: Red RRT: Blue
+RRT*: Red RRT: Blue\
 ![](images/RRT_Vs_RRT_Star.png)
 
 ## RRT* with different number of iteration.
-1250 iterations. Path length: 23.2 meters.
+1250 iterations. Path length: 23.2 meters.\
 ![](images/RRT_star_1250_iterations.png)
 
-4000 iterations. Path length: 20.38 meters.
+4000 iterations. Path length: 20.38 meters.\
 ![](images/RRT_star_4000_iterations.png)
