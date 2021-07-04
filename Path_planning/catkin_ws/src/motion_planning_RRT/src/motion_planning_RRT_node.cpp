@@ -171,8 +171,8 @@ class rrt_planner {
         return result;
     }
 
-//==================================================================================================================
-//=================================================================================================================
+    //==================================================================================================================
+    //=================================================================================================================
     bool check_obstacles(int node1_idx, int node2_idx){
         std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
         std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);
@@ -186,13 +186,20 @@ class rrt_planner {
         float slope;
         float c;
         std::vector<double> arr(4);
-
+        // Checking if obstacle x and y  is betwee the 2 nodes.
         for(int i=0;i<obstacles.size();i++){
             curr_obstacle = get_center_coordinates(obstacles[i]);
             curr_obstaclex = curr_obstacle.first;
             curr_obstacley = curr_obstacle.second;
-            // First checking if obstacle x and y  is betwee the 2 nodes. 
-            if(((node1x >= curr_obstaclex) && (curr_obstaclex >= node2x)) || ((node1x <= curr_obstaclex) && (curr_obstaclex <= node2x))){
+            // First checking special case of vertical line joining the 2 nodes.
+            if(node1x == node2x){
+                if(curr_obstaclex == node1x){
+                    if(((node1y >= curr_obstacley) && (curr_obstacley >= node2y)) || ((node1y <= curr_obstacley) && (curr_obstacley <= node2y))){
+                        return false;
+                    }
+                }
+            } 
+            else if(((node1x >= curr_obstaclex) && (curr_obstaclex >= node2x)) || ((node1x <= curr_obstaclex) && (curr_obstaclex <= node2x))){
                 if(((node1y >= curr_obstacley) && (curr_obstacley >= node2y)) || ((node1y <= curr_obstacley) && (curr_obstacley <= node2y))){
                     slope = (node2y-node1y)/(node2x-node1x);
                     c = node2y - slope*node2x;
@@ -219,7 +226,7 @@ class rrt_planner {
         //std::cout << "No obstacle in way.\n";
         return true;
     }
-//==================================================================================================================
+    //==================================================================================================================
 
     void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
 
