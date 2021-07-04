@@ -16,11 +16,9 @@ class rrt_star_planner {
     ros::Subscriber map_subscriber;
     ros::Publisher path_publisher;
 
-        //=============== Declare variables but don't define anything. Do that in constructor.================
     int INF;
     int rows_;
     int cols_;
-    //int RowColProduct = rows_*cols_;
     std::vector <int> path;
     int source_row;
     int source_col;
@@ -34,18 +32,19 @@ class rrt_star_planner {
     float map_origin_y;
     float jump_threshold;
     float search_radius;
+    int iteration_count;
+    int total_iterations;
     std::vector<int> visited;
     std::vector<int> obstacles;                                   
     std::vector<float> distances;
     std::vector<int> prev;
-    //std::vector<int> neighbour_nodes;
     int loop_count;
     float time_to_solve;
-    //nav_msgs::OccupancyGrid rrt_path;
     nav_msgs::Path rrt_star_path;
+    
 
     public:
-        
+    bool goal_reached;
     rrt_star_planner(ros::NodeHandle *nh) {
         map_subscriber = nh->subscribe("/map", 1, &rrt_star_planner::map_callback, this);
         path_publisher = nh->advertise<nav_msgs::Path>("/rrt_star_path", 1);
@@ -54,8 +53,8 @@ class rrt_star_planner {
         INF = 99999;
         distances.resize((rows_*cols_),99999.00);
         prev.resize((rows_*cols_),INF);
-        //jump_threshold = 1.50;
-        loop_count = 0;
+        iteration_count = 1;
+        goal_reached = false;
     }
 
     int get_idx(int r, int c){
@@ -67,7 +66,12 @@ class rrt_star_planner {
     }
 
     void publish_path(){
-        path_publisher.publish(rrt_star_path);
+        if(goal_reached){
+            path_publisher.publish(rrt_star_path);
+        }
+        else{
+            std::cout << "No path to destination exists \n";
+        }
     }
 
     std::pair<float, float> get_center_coordinates(int idx){
@@ -237,6 +241,41 @@ class rrt_star_planner {
     }
     //==================================================================================================================
 
+    void create_final_path(){
+        path.push_back(dest_index);
+        //std::cout << "Size of path after pushing destination index is " << path.size() << "\n";
+        //std::cout << "Just entering the while loop for creating the path \n";
+        while(true)
+        {
+            //std::cout << "loop_count = " << loop << "\n";
+            //std::cout << "Adding to the path: " << prev[path.back()] << "\n";
+            path.push_back(prev[path.back()]);                           // Adding the parent of each index to path starting from destination.
+            if(path.back() == source_index){                                   
+                break;
+            }
+        }
+        //======================== Adding poses to Path message============================================
+        rrt_star_path.header.frame_id = "map";
+        std::vector<geometry_msgs::PoseStamped> my_poses(path.size());
+        int l=0;
+        for(int k=(path.size()-1);k>=0;k--){
+            std::pair<float, float> cell_center =  get_center_coordinates(path[k]);
+            my_poses[l].pose.position.x = cell_center.first;
+            my_poses[l].pose.position.y = cell_center.second;
+            my_poses[l].pose.position.z = 0.00;
+            my_poses[l].header.seq = l;
+            l++;
+            //std::cout << "this is l: " << l << "\n";
+        }
+        rrt_star_path.poses = my_poses;
+        //std::cout << "Just exited the while loop for creating the path \n";
+        int psize = path.size();
+        ROS_INFO("Path size:  == %d \n", psize);
+
+        //time_to_solve = ros::Time::now().toSec() - current_time; 
+        ROS_INFO("Path found using RRT* algorithm.\n");
+    }
+
     void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
         ROS_INFO("callback started. \n");
         float current_time = ros::Time::now().toSec();
@@ -284,7 +323,12 @@ class rrt_star_planner {
                 else{
                     std::cout << "dest_row: " << dest_row << "\n"; 
                     std::cout << "dest_col: " << dest_col <<"\n";
-                    break;
+                    std::cout << "Now enter the total iterations to perform. The input should be an integer >0 and <="
+                    << ((rows_*cols_)-obstacles.size()) << "\n"; 
+                    std::cin >> total_iterations;
+                    if(total_iterations > 0 && total_iterations<=((rows_*cols_)-obstacles.size())){
+                        break;
+                    }
                 }
             }
             //std::cout << "In the while loop \n";
@@ -298,19 +342,19 @@ class rrt_star_planner {
         distances.at(source_index) = 0;                                         //Initializing source node distance as 0
         
         visited.push_back(source_index);
-        bool goal_reached = false;
 
         if(close_to_dest(source_index)) {       // Start by checking if source is close enough to dest already.
             prev[dest_index] = source_index;
             distances[dest_index] = compute_distance(source_index,dest_index); 
-            goal_reached = false;
+            goal_reached = true;
             std::cout << "The source was very close to goal!! \n";
+            iteration_count = total_iterations;
         }
 
         //=============================================================================================================
         //===================================== RRT* Algorithm starts here ============================================
         //=============================================================================================================
-        while(visited.size()<((rows_*cols_)-obstacles.size())){           // Will keep looping till all cells are visited.
+        while(iteration_count < total_iterations){           // Will keep looping till all cells are visited.
             int new_node_idx = generate_random_node();
             int nearest_node_idx = find_nearest_node(new_node_idx);
             int corrected_new_node_idx = correct_new_node(nearest_node_idx, new_node_idx);
@@ -320,7 +364,7 @@ class rrt_star_planner {
                     prev[corrected_new_node_idx] = nearest_node_idx;       // Adding nearest node as parent of corrected new node.
                     distances[corrected_new_node_idx] = distances[nearest_node_idx] + compute_distance(corrected_new_node_idx,nearest_node_idx);
                     visited.push_back(corrected_new_node_idx);              // Adding corrected new node to visited set(tree).
-
+                    iteration_count++;
                     std::vector<int> neighbour_nodes = get_neighbours(corrected_new_node_idx);
                     for(int neighbour_idx:neighbour_nodes){
                         rewire_node(neighbour_idx, corrected_new_node_idx);                   
@@ -344,49 +388,15 @@ class rrt_star_planner {
 
         }
         //std::cout << "Just exited the while loop \n";
-        std::cout << "Visited.size() = " << visited.size() << "\n";
-        // ====================================Copied path code from dijkstra node======================
-
-                    // prev contains the path. Trace it back to get the path.
-
-        path.push_back(dest_index);
-        //std::cout << "Size of path after pushing destination index is " << path.size() << "\n";
-        //std::cout << "Just entering the while loop for creating the path \n";
-        int loop = 0;
-        while(true)
-        {
-            //std::cout << "loop_count = " << loop << "\n";
-            //std::cout << "Adding to the path: " << prev[path.back()] << "\n";
-            path.push_back(prev[path.back()]);                           // Adding the parent of each index to path starting from destination.
-            if(path.back() == source_index){                                   
-                break;
-            }
-            loop++;
-            
+        //std::cout << "Visited.size() = " << visited.size() << "\n"
+        if(goal_reached){
+            std::cout << "The length of path to destination is: " << distances[dest_index]<<'\n';
+            create_final_path();
         }
-        //======================== Adding poses to Path message============================================
-        rrt_star_path.header.frame_id = "map";
-        std::vector<geometry_msgs::PoseStamped> my_poses(path.size());
-        int l=0;
-        for(int k=(path.size()-1);k>=0;k--){
-            std::pair<float, float> cell_center =  get_center_coordinates(path[k]);
-            my_poses[l].pose.position.x = cell_center.first;
-            my_poses[l].pose.position.y = cell_center.second;
-            my_poses[l].pose.position.z = 0.00;
-            my_poses[l].header.seq = l;
-            l++;
-            //std::cout << "this is l: " << l << "\n";
+        else{
+            std::cout << "The goal was not reached within " << total_iterations << " iterations, try a higher number of iterations.\n";
         }
-        rrt_star_path.poses = my_poses;
-        //std::cout << "Just exited the while loop for creating the path \n";
-        int psize = path.size();
-        ROS_INFO("Path size:  == %d \n", psize);
-
-        time_to_solve = ros::Time::now().toSec() - current_time; 
-        ROS_INFO("Path found using RRT* algorithm.\n");
-
     }
-
 }; // class ends here.
 
 int main(int argc, char **argv){
@@ -396,18 +406,22 @@ int main(int argc, char **argv){
     ros::Duration(1).sleep();
     ros::spinOnce();
     std::cout << "Waiting for somebody to subscribe to /rrt_star_path topic. \n";
-    while(planner.get_subscriber_count()==0){            // Will keep on waiting till Rviz subscribes to /shortest_path topic.
-        planner.publish_path();
-        std::cout << "....\n";
-        ros::Duration(5).sleep();
+    if(planner.goal_reached){
+        while(planner.get_subscriber_count()==0){            // Will keep on waiting till Rviz subscribes to /shortest_path topic.
+            planner.publish_path();
+            std::cout << "....\n";
+            ros::Duration(5).sleep();
+        }
+        std::cout << "Somebody subscribed to /rrt_star_path topic. \nPublishing one last time after 30 seconds and exiting.\n";
+        ros::Duration(10).sleep();
+        for(int i=0;i<10;i++){
+            planner.publish_path();
+            ros::Duration(0.5).sleep();
+        }
     }
-    std::cout << "Somebody subscribed to /rrt_star_path topic. \nPublishing one last time after 30 seconds and exiting.\n";
-    ros::Duration(10).sleep();
-    for(int i=0;i<10;i++){
-        planner.publish_path();
-        ros::Duration(0.5).sleep();
-    }
-    
+    else {
+        std::cout << "Goal not reached, so just exiting.\n";
+    }    
     return 0;
 }
 
