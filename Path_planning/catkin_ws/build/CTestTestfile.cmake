@@ -6,4 +6,6 @@
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
 subdirs("motion_planning_A_star")
+subdirs("motion_planning_RRT")
+subdirs("motion_planning_RRT_star")
 subdirs("motion_planning_test")
