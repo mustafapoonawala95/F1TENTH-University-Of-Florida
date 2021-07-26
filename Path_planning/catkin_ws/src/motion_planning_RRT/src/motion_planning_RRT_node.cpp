@@ -34,15 +34,12 @@ class rrt_planner {
     float map_origin_x;
     float map_origin_y;
     float jump_threshold;
-    std::vector<int>dr; // = {1, -1, 0, 0, 1, 1, -1, -1}; // Direction vectors
-    std::vector<int>dc;// = {0, 0, 1, -1, 1, -1, 1, -1};
-    std::vector<int> visited;//(RowColProduct,false); 
+    std::vector<int> visited;
     std::vector<int> obstacles;                                      // Contains the indices of all the occupied grid cells.
-    std::vector<float> distances;//(rows_*cols_,INF);
-    std::vector<int> prev;//(rows_*cols_,INF);
-    int loop_count;// = 0;
+    std::vector<float> distances;
+    std::vector<int> prev;
+    int loop_count;
     float time_to_solve;
-    //nav_msgs::OccupancyGrid rrt_path;
     nav_msgs::Path rrt_path;
 
 
@@ -50,17 +47,12 @@ class rrt_planner {
         
     rrt_planner(ros::NodeHandle *nh) {
         map_subscriber = nh->subscribe("/map", 1, &rrt_planner::map_callback, this);
-        //path_publisher = nh->advertise<nav_msgs::OccupancyGrid>("/rrt_path", 1);
         path_publisher = nh->advertise<nav_msgs::Path>("/rrt_path", 1);
         rows_ = 1;
         cols_ = 1;
         INF = 99999;
-        //dr = {1, -1, 0, 0, 1, 1, -1, -1};
-        //dc = {0, 0, 1, -1, 1, -1, 1, -1};
-        //visited.resize(RowColProduct,false);
         distances.resize((rows_*cols_),99999.00);
         prev.resize((rows_*cols_),INF);
-        //jump_threshold = 1.50;
         loop_count = 0;
     }
 
@@ -73,12 +65,10 @@ class rrt_planner {
     }
 
     void publish_path(){
-        //path_publisher.publish(rrt_path);
         path_publisher.publish(rrt_path);
     }
 
     std::pair<float, float> get_center_coordinates(int idx){
-        //=====================================
         int r = idx/cols_;
         int c = idx - (r*cols_);
         float pos_x = map_origin_x + (c + 0.5)*gridsize;
