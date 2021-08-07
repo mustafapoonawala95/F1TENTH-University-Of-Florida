@@ -168,46 +168,46 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule
-.PHONY : motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule
+motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/rule:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/rule
+.PHONY : motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/rule
 
 # Convenience name for target.
-motion_planning_test_node: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule
+motion_planning_dijkstra_node: motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/rule
 
-.PHONY : motion_planning_test_node
+.PHONY : motion_planning_dijkstra_node
 
 # fast build rule for target.
-motion_planning_test_node/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build
-.PHONY : motion_planning_test_node/fast
+motion_planning_dijkstra_node/fast:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/build
+.PHONY : motion_planning_dijkstra_node/fast
 
-src/motion_planning_test_node.o: src/motion_planning_test_node.cpp.o
+src/motion_planning_dijkstra_node.o: src/motion_planning_dijkstra_node.cpp.o
 
-.PHONY : src/motion_planning_test_node.o
+.PHONY : src/motion_planning_dijkstra_node.o
 
 # target to build an object file
-src/motion_planning_test_node.cpp.o:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o
-.PHONY : src/motion_planning_test_node.cpp.o
+src/motion_planning_dijkstra_node.cpp.o:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/src/motion_planning_dijkstra_node.cpp.o
+.PHONY : src/motion_planning_dijkstra_node.cpp.o
 
-src/motion_planning_test_node.i: src/motion_planning_test_node.cpp.i
+src/motion_planning_dijkstra_node.i: src/motion_planning_dijkstra_node.cpp.i
 
-.PHONY : src/motion_planning_test_node.i
+.PHONY : src/motion_planning_dijkstra_node.i
 
 # target to preprocess a source file
-src/motion_planning_test_node.cpp.i:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.i
-.PHONY : src/motion_planning_test_node.cpp.i
+src/motion_planning_dijkstra_node.cpp.i:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/src/motion_planning_dijkstra_node.cpp.i
+.PHONY : src/motion_planning_dijkstra_node.cpp.i
 
-src/motion_planning_test_node.s: src/motion_planning_test_node.cpp.s
+src/motion_planning_dijkstra_node.s: src/motion_planning_dijkstra_node.cpp.s
 
-.PHONY : src/motion_planning_test_node.s
+.PHONY : src/motion_planning_dijkstra_node.s
 
 # target to generate assembly for a file
-src/motion_planning_test_node.cpp.s:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.s
-.PHONY : src/motion_planning_test_node.cpp.s
+src/motion_planning_dijkstra_node.cpp.s:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_dijkstra_node.dir/src/motion_planning_dijkstra_node.cpp.s
+.PHONY : src/motion_planning_dijkstra_node.cpp.s
 
 # Help Target
 help:
@@ -219,13 +219,13 @@ help:
 	@echo "... install/local"
 	@echo "... test"
 	@echo "... list_install_components"
-	@echo "... motion_planning_test_node"
+	@echo "... motion_planning_dijkstra_node"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... install"
-	@echo "... src/motion_planning_test_node.o"
-	@echo "... src/motion_planning_test_node.i"
-	@echo "... src/motion_planning_test_node.s"
+	@echo "... src/motion_planning_dijkstra_node.o"
+	@echo "... src/motion_planning_dijkstra_node.i"
+	@echo "... src/motion_planning_dijkstra_node.s"
 .PHONY : help
 
 

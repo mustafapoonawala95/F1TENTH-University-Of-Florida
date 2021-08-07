@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_test.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_dijkstra.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/motion_planning_test/cmake" TYPE FILE FILES
-    "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_testConfig.cmake"
-    "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_testConfig-version.cmake"
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/motion_planning_dijkstra/cmake" TYPE FILE FILES
+    "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_dijkstraConfig.cmake"
+    "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test/catkin_generated/installspace/motion_planning_dijkstraConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/motion_planning_test" TYPE FILE FILES "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/src/motion_planning_test/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/motion_planning_dijkstra" TYPE FILE FILES "/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/src/motion_planning_test/package.xml")
 endif()
 

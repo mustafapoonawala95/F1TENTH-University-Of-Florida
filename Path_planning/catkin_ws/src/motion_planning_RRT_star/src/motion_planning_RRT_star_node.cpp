@@ -1,3 +1,11 @@
+/* 
+@file: motion_planning_RRT_star_node.cpp
+@author: Mustafa Poonawala
+
+RRT* planner node, subscribes to /map topic to get occupancy grid map, /gt_pose for car's position 
+and /move_base_simple/goal for goal position.
+*/
+
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
@@ -14,11 +22,14 @@ class rrt_star_planner {
     private:
 
     ros::Subscriber map_subscriber;
+    ros::Subscriber car_pose_subscriber;
+    ros::Subscriber destination_subscriber;
     ros::Publisher path_publisher;
 
     int INF;
     int rows_;
     int cols_;
+    int RowColProduct = rows_*cols_;
     std::vector <int> path;
     int source_row;
     int source_col;
@@ -30,35 +41,71 @@ class rrt_star_planner {
     float gridsize;
     float map_origin_x;
     float map_origin_y;
+    std::vector<int> map_data_;
+    std::vector<int> visited;
+    std::vector<int> obstacles;
     float jump_threshold;
     float search_radius;
-    int iteration_count;
-    int total_iterations;
-    std::vector<int> visited;
-    std::vector<int> obstacles;                                   
-    std::vector<float> distances;
+    int expected_neighbour_nodes_;
     std::vector<int> prev;
+    std::vector<float> distances;
     int loop_count;
     float time_to_solve;
     nav_msgs::Path rrt_star_path;
-    
+    float pi_;
 
     public:
-    bool goal_reached;
+    //bool goal_reached;    Removed because not there in rrt_star code. 
     rrt_star_planner(ros::NodeHandle *nh) {
         map_subscriber = nh->subscribe("/map", 1, &rrt_star_planner::map_callback, this);
+        car_pose_subscriber = nh->subscribe("/gt_pose", 1, &rrt_star_planner::car_pose_callback, this);
+        destination_subscriber = nh->subscribe("/move_base_simple/goal", 1, &rrt_star_planner::destination_callback, this);
         path_publisher = nh->advertise<nav_msgs::Path>("/rrt_star_path", 1);
         rows_ = 1;
         cols_ = 1;
-        INF = 99999;
-        distances.resize((rows_*cols_),99999.00);
-        prev.resize((rows_*cols_),INF);
-        iteration_count = 1;
-        goal_reached = false;
+        INF = 99999.00;
+        gridsize = 0.01;
+        loop_count = 0;
+        pi_ = 2*acos(0.0);
+        expected_neighbour_nodes_ = 3;
     }
 
     int get_idx(int r, int c){
         return ((r*cols_) + c);
+    }
+
+    void inflate_obstacles(){
+        std::set<int> indexes_to_fill;
+        for(int i=0;i<map_data_.size();i++){
+            if(map_data_[i]==100){   //Checking for obstacle.
+                int r = i/cols_;
+                int c = i - r*cols_;
+                for(int j=-6; j<=6; j++){       // Inflating 6 rows and 6 cols around the original obsatcle. 
+                    for(int k=-6;k<=6;k++){
+                        int rr,cc;
+                        rr = r + j;
+                        cc = c + k;
+                        if(rr<0 || rr >= rows_ || cc < 0 || cc >= cols_){
+                        }
+                        else{
+                            int index = get_idx(rr,cc);
+                            indexes_to_fill.insert(index);      // Pushing into a set so indexes are not repeated.
+                        } 
+                    }
+                }
+            }
+        }
+        for(auto l:indexes_to_fill){
+            map_data_[l] = 100;    // Inflating obstacles.
+        }
+    }
+
+    std::pair<float, float> get_center_coordinates(int idx){
+        int r = idx/cols_;
+        int c = idx - (r*cols_);
+        float pos_x = map_origin_x + (c + 0.5)*gridsize;   
+        float pos_y = map_origin_y + (r + 0.5)*gridsize;
+        return std::make_pair(pos_x,pos_y);
     }
 
     int get_subscriber_count(){
@@ -66,20 +113,16 @@ class rrt_star_planner {
     }
 
     void publish_path(){
-        if(goal_reached){
-            path_publisher.publish(rrt_star_path);
-        }
-        else{
-            std::cout << "No path to destination exists \n";
-        }
+        path_publisher.publish(rrt_star_path);
     }
 
-    std::pair<float, float> get_center_coordinates(int idx){
-        int r = idx/cols_;
-        int c = idx - (r*cols_);
-        float pos_x = map_origin_x + (c + 0.5)*gridsize;
-        float pos_y = map_origin_y + (r + 0.5)*gridsize;
-        return std::make_pair(pos_x,pos_y);
+    float compute_distance(int node1_idx, int node2_idx){                      // Euclidian distance.
+        std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
+        std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);        
+        float Dx = (node1_coordinates.first - node2_coordinates.first);
+        float Dy = (node1_coordinates.second - node2_coordinates.second);
+        float dist = sqrt((Dx*Dx) + (Dy*Dy));
+        return dist;
     }
 
     int generate_random_node(){
@@ -107,15 +150,6 @@ class rrt_star_planner {
                 return index;
             }
         }
-    }
-
-    float compute_distance(int node1_idx, int node2_idx){                      // Euclidian distance.
-        std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
-        std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);        
-        float Dx = (node1_coordinates.first - node2_coordinates.first);
-        float Dy = (node1_coordinates.second - node2_coordinates.second);
-        float dist = sqrt((Dx*Dx) + (Dy*Dy));
-        return dist;
     }
 
     int find_nearest_node(int random_node_idx){
@@ -149,8 +183,8 @@ class rrt_star_planner {
             corrected_point.first = (1 - t)*current_nearest_node.first + t*new_node.first;
             corrected_point.second = ((1 - t)*current_nearest_node.second + t*new_node.second);
 
-            int col = corrected_point.first/gridsize;
-            int row = corrected_point.second/gridsize;
+            int col = (corrected_point.first - map_origin_x)/gridsize;
+            int row = (corrected_point.second - map_origin_y)/gridsize;
 
             idx = get_idx(row, col); 
         }
@@ -164,24 +198,10 @@ class rrt_star_planner {
         return result;
     }
 
-    std::vector<int> get_neighbours(int node_idx){
-        std::vector<int> neighbours;
-        for(int neighbour_idx:visited){
-            if((compute_distance(neighbour_idx, node_idx) < search_radius) && (neighbour_idx!=node_idx)){
-                neighbours.push_back(neighbour_idx);
-            }
-        }
-        return neighbours;
-    }
-
-    void rewire_node(int potential_parent_node, int child_node){
-        float c = distances[potential_parent_node] + compute_distance(potential_parent_node, child_node);
-        if(c < distances[child_node]){
-            if(check_obstacles(potential_parent_node, child_node)){
-                prev[child_node] = potential_parent_node;
-                distances.at(child_node) = c;
-            }
-        }
+    float get_search_radius(){
+        float map_area = rows_*cols_*gridsize*gridsize;    // Total map area in units^2.
+        float epsilon = sqrt((expected_neighbour_nodes_*map_area)/(visited.size()*pi_));
+        return std::max(epsilon,jump_threshold);   // Returning jump threshold if search radius becomes smaller than jump threshold.
     }
 
     //==================================================================================================================
@@ -241,20 +261,37 @@ class rrt_star_planner {
     }
     //==================================================================================================================
 
+    std::vector<int> get_neighbours(int node_idx){
+        std::vector<int> neighbours;
+        for(int neighbour_idx:visited){
+            if((compute_distance(neighbour_idx, node_idx) < search_radius) && (neighbour_idx!=node_idx)){
+                neighbours.push_back(neighbour_idx);
+            }
+        }
+        return neighbours;
+    }
+
+    void rewire_node(int potential_parent_node, int child_node){
+        float c = distances[potential_parent_node] + compute_distance(potential_parent_node, child_node);
+        if(c < distances[child_node]){
+            if(check_obstacles(potential_parent_node, child_node)){
+                prev[child_node] = potential_parent_node;
+                distances.at(child_node) = c;
+            }
+        }
+    }
+
     void create_final_path(){
+        std::vector <int> path;
         path.push_back(dest_index);
-        //std::cout << "Size of path after pushing destination index is " << path.size() << "\n";
-        //std::cout << "Just entering the while loop for creating the path \n";
         while(true)
         {
-            //std::cout << "loop_count = " << loop << "\n";
-            //std::cout << "Adding to the path: " << prev[path.back()] << "\n";
-            path.push_back(prev[path.back()]);                           // Adding the parent of each index to path starting from destination.
+            path.push_back(prev[path.back()]);         // Adding the parent of each index to path starting from destination.
             if(path.back() == source_index){                                   
                 break;
             }
         }
-        //======================== Adding poses to Path message============================================
+        std::cout << "Just exited the while loop for creating the path \n";
         rrt_star_path.header.frame_id = "map";
         std::vector<geometry_msgs::PoseStamped> my_poses(path.size());
         int l=0;
@@ -274,9 +311,143 @@ class rrt_star_planner {
 
         //time_to_solve = ros::Time::now().toSec() - current_time; 
         ROS_INFO("Path found using RRT* algorithm.\n");
+        visited.clear();
+        prev.clear();           // Clearing parent data so that it doesn't interfere with next iteration of RRT*.
+        std::fill(distances.begin(), distances.end(), 999999.00); //Re initializing distances with high value for next RRT* run.
+    }
+
+    void car_pose_callback(const geometry_msgs::PoseStamped::ConstPtr& car_pose){
+        float x = car_pose->pose.position.x - map_origin_x;
+        float y = car_pose->pose.position.y - map_origin_y;
+        //std::cout << "x car and y car is: " << x << ", " << y << "\n";
+        int col = x/gridsize;
+        int row = y/gridsize;
+        source_index = get_idx(row, col); 
+        //std::cout << "Source index is " << source_index << "\n";
     }
 
     void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
+        ROS_INFO("Map callback started. \n");
+        //float current_time = ros::Time::now().toSec();
+        rows_ = map->info.height;
+        std::cout << "rows_ from map height:= " << rows_ <<'\n';
+        cols_ = map->info.width;
+        std::cout << "cols_ from map width:= " << cols_ <<'\n';
+        //visited.resize(rows_*cols_,false);
+        prev.resize(rows_*cols_,99999);
+        distances.resize(rows_*cols_,99999.00);
+        gridsize = map->info.resolution;
+        std::cout << "Gridsize is: " << gridsize << "\n";
+        map_origin_x = map->info.origin.position.x;
+        map_origin_y = map->info.origin.position.y;
+        map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
+        jump_threshold = 0.5;//30*gridsize;
+
+        inflate_obstacles();
+        for(int i=0;i<(rows_*cols_);i++){                     
+            if(map_data_[i]==100){                         //Making all obstacles from the map as visited.
+                obstacles.push_back(i);
+            }
+        }
+        //map_data_ = map->data;
+        std::cout << "Map origin x and y are: " << map_origin_x << ", " << map_origin_y <<"\n";
+        std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
+        << ", " << map->info.origin.orientation.w << "\n";
+    }
+
+    void destination_callback(const geometry_msgs::PoseStamped::ConstPtr& destination_point){
+        int iteration_count = 0;
+        int percentage_done= 0;
+        ROS_INFO("callback started. \n");     
+        float x = destination_point->pose.position.x - map_origin_x;
+        float y = destination_point->pose.position.y - map_origin_y;
+        std::cout << "x dest. and y dest. is: " << x << ", " << y << "\n";
+        int col = x/gridsize;
+        int row = y/gridsize;
+        dest_index = get_idx(row, col); 
+        //std::cout << "Destination index is " << dest_index << "\n";
+        prev[source_index] = 0;
+        visited.push_back(source_index);
+        search_radius = get_search_radius(); //3*sqrt(2)*gridsize;   // Currently going with constant search radius but need to change later.
+        std::cout << "Search radius is: " << search_radius << "\n";
+        bool goal_reached = false;
+        if(close_to_dest(source_index)) {       // Start by checking if source is close enough to dest already.
+            prev[dest_index] = source_index;
+            distances[dest_index] = compute_distance(source_index,dest_index); 
+            goal_reached = true;
+            visited.clear();
+            std::cout << "The source was very close to goal!! \n";
+        }
+        //=============================================================================================================
+        //====================================== RRT* Algorithm starts here ============================================
+        //=============================================================================================================
+        int total_iterations;
+        while(true){
+            std:: cout << "Enter the number of iterations to perform for the RRT* algorithm.\n";
+            std::cin >> total_iterations;
+            if(total_iterations > 0 && total_iterations<=((rows_*cols_)-obstacles.size())){
+                break;
+            }
+        }
+        while(iteration_count<total_iterations){
+            search_radius = get_search_radius();
+            //std::cout << "Search radius is: " << search_radius << "\n";
+            int new_node_idx = generate_random_node();
+            int nearest_node_idx = find_nearest_node(new_node_idx);
+            int corrected_new_node_idx = correct_new_node(nearest_node_idx, new_node_idx);
+            if(!(std::find(visited.begin(), visited.end(), corrected_new_node_idx) != visited.end())){
+                if(check_obstacles(nearest_node_idx, corrected_new_node_idx)){
+                    prev[corrected_new_node_idx] = nearest_node_idx;       // Adding nearest node as parent of corrected new node.
+                    distances[corrected_new_node_idx] = distances[nearest_node_idx] + compute_distance(corrected_new_node_idx,nearest_node_idx);
+                    visited.push_back(corrected_new_node_idx);              // Adding corrected new node to visited set(tree).
+                    iteration_count++;
+                    int p = 100*(iteration_count/total_iterations);
+                    if(p>percentage_done){
+                        std::cout << p << " Percentage done\n";
+                        percentage_done = p;
+                    }
+                    //std::cout << "Iteration count is: " << iteration_count << "\n";
+                    std::vector<int> neighbour_nodes = get_neighbours(corrected_new_node_idx);
+                    //std::cout << "The number of neighbours are: " << neighbour_nodes.size() << "\n";
+                    for(int neighbour_idx:neighbour_nodes){
+                        rewire_node(neighbour_idx, corrected_new_node_idx);                   
+                    }
+                    for(int neighbour_idx:neighbour_nodes){
+                        rewire_node(corrected_new_node_idx, neighbour_idx);
+                    }
+                    if(corrected_new_node_idx == dest_index){
+                        goal_reached = true;
+                        visited.pop_back(); // Removing dest index from visited otherwise dest could turn up to be parent of some other node.
+                        //visited.clear();
+                        std::cout << "Last visited node was the destnation, destination reached. \n";
+                    }
+                    else if(close_to_dest(corrected_new_node_idx) && check_obstacles(corrected_new_node_idx, dest_index)){             // Checking if corrected new node is close enough to dest.
+                        prev[dest_index] = corrected_new_node_idx;
+                        distances[dest_index] = distances[corrected_new_node_idx] + compute_distance(corrected_new_node_idx, dest_index);
+                        goal_reached = true;
+                        //visited.clear();
+                        std::cout << "The last new node was close enough to dest to join to it. \n";
+                    }
+                }
+            }
+        }
+        if(goal_reached){
+            create_final_path();
+            publish_path();
+        }
+        else {
+            std::cout << "The number of iteration were not sufficient to find a path.\n";
+            visited.clear();
+            prev.clear();
+            std::fill(distances.begin(), distances.end(), 999999.00);
+            
+        }
+        
+        std::cout << "The number of iterations taken is: " << iteration_count << "\n";
+    }
+}; // class ends here.
+
+    /*void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
         ROS_INFO("callback started. \n");
         float current_time = ros::Time::now().toSec();
         rows_ = map->info.height;
@@ -396,10 +567,18 @@ class rrt_star_planner {
         else{
             std::cout << "The goal was not reached within " << total_iterations << " iterations, try a higher number of iterations.\n";
         }
-    }
-}; // class ends here.
+    }*/
 
 int main(int argc, char **argv){
+    ros::init(argc, argv, "motion_planning_rrt_star_node");
+    ros::NodeHandle nh;
+    rrt_star_planner planner = rrt_star_planner(&nh);
+    ros::Duration(1).sleep();
+    ros::spin();
+    return 0;
+}
+
+/*int main(int argc, char **argv){
     ros::init(argc, argv, "motion_planning_RRT_star_node");
     ros::NodeHandle nh;
     rrt_star_planner planner = rrt_star_planner(&nh);
@@ -423,7 +602,7 @@ int main(int argc, char **argv){
         std::cout << "Goal not reached, so just exiting.\n";
     }    
     return 0;
-}
+}*/
 
 
 

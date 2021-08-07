@@ -1,3 +1,10 @@
+/* 
+@file: motion_planning_RRT_node.cpp
+@author: Mustafa Poonawala
+
+RRT planner node, subscribes to /map topic to get occupancy grid map, /gt_pose for car's position 
+and /move_base_simple/goal for goal position.
+*/
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
@@ -14,8 +21,9 @@ class rrt_planner {
     private:
 
     ros::Subscriber map_subscriber;
+    ros::Subscriber car_pose_subscriber;
+    ros::Subscriber destination_subscriber;
     ros::Publisher path_publisher;
-    //ros::Publisher path_pose_publisher;
 
         //=============== Declare variables but don't define anything. Do that in constructor.================
     int INF;
@@ -33,10 +41,10 @@ class rrt_planner {
     float gridsize;
     float map_origin_x;
     float map_origin_y;
-    float jump_threshold;
+    std::vector<int> map_data_;
     std::vector<int> visited;
-    std::vector<int> obstacles;                                      // Contains the indices of all the occupied grid cells.
-    std::vector<float> distances;
+    std::vector<int> obstacles;
+    float jump_threshold;
     std::vector<int> prev;
     int loop_count;
     float time_to_solve;
@@ -47,17 +55,52 @@ class rrt_planner {
         
     rrt_planner(ros::NodeHandle *nh) {
         map_subscriber = nh->subscribe("/map", 1, &rrt_planner::map_callback, this);
+        car_pose_subscriber = nh->subscribe("/gt_pose", 1, &rrt_planner::car_pose_callback, this);
+        destination_subscriber = nh->subscribe("/move_base_simple/goal", 1, &rrt_planner::destination_callback, this);
         path_publisher = nh->advertise<nav_msgs::Path>("/rrt_path", 1);
         rows_ = 1;
         cols_ = 1;
-        INF = 99999;
-        distances.resize((rows_*cols_),99999.00);
-        prev.resize((rows_*cols_),INF);
+        INF = 99999.00;
+        gridsize = 0.01;
         loop_count = 0;
     }
 
     int get_idx(int r, int c){
         return ((r*cols_) + c);
+    }
+
+    void inflate_obstacles(){
+        std::set<int> indexes_to_fill;
+        for(int i=0;i<map_data_.size();i++){
+            if(map_data_[i]==100){   //Checking for obstacle.
+                int r = i/cols_;
+                int c = i - r*cols_;
+                for(int j=-6; j<=6; j++){       // Inflating 6 rows and 6 cols around the original obsatcle. 
+                    for(int k=-6;k<=6;k++){
+                        int rr,cc;
+                        rr = r + j;
+                        cc = c + k;
+                        if(rr<0 || rr >= rows_ || cc < 0 || cc >= cols_){
+                        }
+                        else{
+                            int index = get_idx(rr,cc);
+                            indexes_to_fill.insert(index);      // Pushing into a set so indexes are not repeated.
+                        } 
+                    }
+                }
+            }
+        }
+        for(auto l:indexes_to_fill){
+            map_data_[l] = 100;    // Inflating obstacles.
+        }
+    }
+
+    std::pair<float, float> get_center_coordinates(int idx){
+        int r = idx/cols_;
+        int c = idx - (r*cols_);
+        float pos_x = map_origin_x + (c + 0.5)*gridsize;   
+        float pos_y = map_origin_y + (r + 0.5)*gridsize;
+        return std::make_pair(pos_x,pos_y);
     }
 
     int get_subscriber_count(){
@@ -68,12 +111,13 @@ class rrt_planner {
         path_publisher.publish(rrt_path);
     }
 
-    std::pair<float, float> get_center_coordinates(int idx){
-        int r = idx/cols_;
-        int c = idx - (r*cols_);
-        float pos_x = map_origin_x + (c + 0.5)*gridsize;
-        float pos_y = map_origin_y + (r + 0.5)*gridsize;
-        return std::make_pair(pos_x,pos_y);
+    float compute_distance(int node1_idx, int node2_idx){                      // Euclidian distance.
+        std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
+        std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);        
+        float Dx = (node1_coordinates.first - node2_coordinates.first);
+        float Dy = (node1_coordinates.second - node2_coordinates.second);
+        float dist = sqrt((Dx*Dx) + (Dy*Dy));
+        return dist;
     }
 
     int generate_random_node(){
@@ -103,19 +147,7 @@ class rrt_planner {
         }
     }
 
-
-    float compute_distance(int node1_idx, int node2_idx){                      // Euclidian distance.
-
-        std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
-        std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);        
-        float Dx = (node1_coordinates.first - node2_coordinates.first);
-        float Dy = (node1_coordinates.second - node2_coordinates.second);
-        float dist = sqrt((Dx*Dx) + (Dy*Dy));
-        return dist;
-    }
-
     int find_nearest_node(int random_node_idx){
-
         float lowest_dist = 99999.00;
         int nearest_node_idx;
         float dist;
@@ -146,8 +178,8 @@ class rrt_planner {
             corrected_point.first = (1 - t)*current_nearest_node.first + t*new_node.first;
             corrected_point.second = ((1 - t)*current_nearest_node.second + t*new_node.second);
 
-            int col = corrected_point.first/gridsize;
-            int row = corrected_point.second/gridsize;
+            int col = (corrected_point.first - map_origin_x)/gridsize;
+            int row = (corrected_point.second - map_origin_y)/gridsize;
 
             idx = get_idx(row, col); 
         }
@@ -161,8 +193,38 @@ class rrt_planner {
         return result;
     }
 
-    //==================================================================================================================
-    //=================================================================================================================
+    void create_final_path(){
+        std::vector <int> path;
+        path.push_back(dest_index);
+        while(true)
+        {
+            path.push_back(prev[path.back()]);         // Adding the parent of each index to path starting from destination.
+            if(path.back() == source_index){                                   
+                break;
+            }
+        }
+        rrt_path.header.frame_id = "map";
+        std::vector<geometry_msgs::PoseStamped> my_poses(path.size());
+        int l=0;
+        for(int k=(path.size()-1);k>=0;k--){
+            std::pair<float, float> cell_center =  get_center_coordinates(path[k]);
+            my_poses[l].pose.position.x = cell_center.first;
+            my_poses[l].pose.position.y = cell_center.second;
+            my_poses[l].pose.position.z = 0.00;
+            my_poses[l].header.seq = l;
+            l++;
+            //std::cout << "this is l: " << l << "\n";
+        }
+        rrt_path.poses = my_poses;
+        //std::cout << "Just exited the while loop for creating the path \n";
+        int psize = path.size();
+        ROS_INFO("Path size:  == %d \n", psize);
+
+        //time_to_solve = ros::Time::now().toSec() - current_time; 
+        ROS_INFO("Path found using RRT algorithm.\n");
+        prev.clear();           // Clearing parent data so that it doesn't interfere with next iteration of A star.
+    }
+
     bool check_obstacles(int node1_idx, int node2_idx){
         std::pair<float, float> node1_coordinates =  get_center_coordinates(node1_idx);
         std::pair<float, float> node2_coordinates =  get_center_coordinates(node2_idx);
@@ -216,6 +278,103 @@ class rrt_planner {
         //std::cout << "No obstacle in way.\n";
         return true;
     }
+
+    void car_pose_callback(const geometry_msgs::PoseStamped::ConstPtr& car_pose){
+        float x = car_pose->pose.position.x - map_origin_x;
+        float y = car_pose->pose.position.y - map_origin_y;
+        //std::cout << "x car and y car is: " << x << ", " << y << "\n";
+        int col = x/gridsize;
+        int row = y/gridsize;
+        source_index = get_idx(row, col); 
+        //std::cout << "Source index is " << source_index << "\n";
+    }
+
+    void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
+        ROS_INFO("Map callback started. \n");
+        //float current_time = ros::Time::now().toSec();
+        rows_ = map->info.height;
+        std::cout << "rows_ from map height:= " << rows_ <<'\n';
+        cols_ = map->info.width;
+        std::cout << "cols_ from map width:= " << cols_ <<'\n';
+        //visited.resize(rows_*cols_,false);
+        prev.resize(rows_*cols_,99999);
+        gridsize = map->info.resolution;
+        std::cout << "Gridsize is: " << gridsize << "\n";
+        map_origin_x = map->info.origin.position.x;
+        map_origin_y = map->info.origin.position.y;
+        map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
+        jump_threshold = 0.5;//30*gridsize;
+
+        inflate_obstacles();
+        for(int i=0;i<(rows_*cols_);i++){                     
+            if(map_data_[i]==100){                         //Making all obstacles from the map as visited.
+                obstacles.push_back(i);
+            }
+        }
+        //map_data_ = map->data;
+        std::cout << "Map origin x and y are: " << map_origin_x << ", " << map_origin_y <<"\n";
+        std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
+        << ", " << map->info.origin.orientation.w << "\n";
+    }
+
+    void destination_callback(const geometry_msgs::PoseStamped::ConstPtr& destination_point){
+        float x = destination_point->pose.position.x - map_origin_x;
+        float y = destination_point->pose.position.y - map_origin_y;
+        std::cout << "x dest. and y dest. is: " << x << ", " << y << "\n";
+        int col = x/gridsize;
+        int row = y/gridsize;
+        dest_index = get_idx(row, col); 
+        //std::cout << "Destination index is " << dest_index << "\n";
+        prev[source_index] = 0;
+        visited.push_back(source_index);
+        bool goal_reached = false;
+        if(close_to_dest(source_index)) {       // Start by checking if source is close enough to dest already.
+            prev[dest_index] = source_index;
+            //distances[dest_index] = compute_distance(source_index,dest_index); 
+            goal_reached = true;
+            visited.clear();
+            std::cout << "The source was very close to goal!! \n";
+        }
+        //=============================================================================================================
+        //====================================== RRT Algorithm starts here ============================================
+        //=============================================================================================================
+        while(!goal_reached){
+            int new_node_idx = generate_random_node();
+            int nearest_node_idx = find_nearest_node(new_node_idx);
+            int corrected_new_node_idx = correct_new_node(nearest_node_idx, new_node_idx);
+            if(!(std::find(visited.begin(), visited.end(), corrected_new_node_idx) != visited.end())){
+                if(check_obstacles(nearest_node_idx, corrected_new_node_idx)){
+                    prev[corrected_new_node_idx] = nearest_node_idx;
+                    //distances[corrected_new_node_idx] = distances[nearest_node_idx] + compute_distance(corrected_new_node_idx,nearest_node_idx);
+                    visited.push_back(corrected_new_node_idx);              // Adding corrected new node to visited set(tree).
+                    //std::cout << "Visited.size() is: " << visited.size() << "\n"; 
+                    if(corrected_new_node_idx == dest_index){
+                        goal_reached = true;
+                        visited.clear();
+                        std::cout << "Last visited node was the destnation, destination reached. \n";
+                    }
+                    else if(close_to_dest(corrected_new_node_idx) && check_obstacles(corrected_new_node_idx, dest_index)){             // Checking if corrected new node is close enough to dest.
+                        prev[dest_index] = corrected_new_node_idx;
+                        //distances[dest_index] = distances[corrected_new_node_idx] + compute_distance(corrected_new_node_idx, dest_index);
+                        goal_reached = true;
+                        visited.clear();
+                        std::cout << "The last new node was close enough to dest to join to it. \n";
+                    }
+                }
+            }
+        }
+        create_final_path();
+        publish_path();
+    }
+};
+
+    
+
+    
+
+/*    //==================================================================================================================
+    //=================================================================================================================
+    
     //==================================================================================================================
 
     void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
@@ -235,45 +394,8 @@ class rrt_planner {
         prev.resize(rows_*cols_, INF);
         distances.resize(rows_*cols_, 99999.00);
         //visited.resize(rows_*cols_, false);
-
-        for(int i=0;i<(rows_*cols_);i++){                                 // Create vector of indices of all occupied cells.
-            prev.at(i) = INF;
-            if(map->data[i]==100){
-                obstacles.push_back(i);
-                //std::cout << "Index " << i << " is an obstacle.\n";
-            }
-        }
-
-        while(true){
-            std::cout << "Enter source row and col. Make sure they are within map range and also not on any obstacle. \n";
-            std::cin >> source_row >> source_col;
-            std::cout << "source_row: " << source_row << "\n"; 
-            std::cout << "source_col: " << source_col <<"\n";
-            if(source_row < 0 || source_row >= rows_ || source_col < 0 || source_col >= cols_ || (std::find(obstacles.begin(), obstacles.end(),get_idx(source_row,source_col))!=obstacles.end()))
-            {
-                std::cout << "[ERROR] The source is either out of map range or on an obstacle. Please try again \n";
-            }
-            else{
-                std::cout << "Enter destination row and col. Make sure they are within map range and also not on any obstacle. \n";
-                std::cin >> dest_row >> dest_col;
-                if(dest_row < 0 || dest_row >= rows_ || dest_col < 0 || dest_col >= cols_ || (std::find(obstacles.begin(), obstacles.end(),get_idx(dest_row,dest_col))!=obstacles.end()))
-                {
-                    std::cout << "[ERROR] The destination is either out of map range or on an obstacle. Please try again \n";
-                }
-                else{
-                    std::cout << "dest_row: " << dest_row << "\n"; 
-                    std::cout << "dest_col: " << dest_col <<"\n";
-                    break;
-                }
-            }
-            //std::cout << "In the while loop \n";
-        }
-        //std::cout << "Exited the while loop \n";
-        //=================================================================================
-
-        source_index = get_idx(source_row, source_col);
-        dest_index = get_idx(dest_row, dest_col);
-        prev[source_index] = 0;                                                 // Adding the parent of source as 0.
+        
+                                                         // Adding the parent of source as 0.
         distances.at(source_index) = 0;                                         //Initializing source node distance as 0
         
         visited.push_back(source_index);
@@ -356,26 +478,13 @@ class rrt_planner {
         ROS_INFO("Path found using RRT algorithm.\n");
     }
 
-};
+};*/
 
 int main(int argc, char **argv){
-    ros::init(argc, argv, "motion_planning_RRT_node");
+    ros::init(argc, argv, "motion_planning_rrt_node");
     ros::NodeHandle nh;
     rrt_planner planner = rrt_planner(&nh);
     ros::Duration(1).sleep();
-    ros::spinOnce();
-    std::cout << "Waiting for somebody to subscribe to /rrt_path topic. \n";
-    while(planner.get_subscriber_count()==0){            // Will keep on waiting till Rviz subscribes to /shortest_path topic.
-        planner.publish_path();
-        std::cout << "....\n";
-        ros::Duration(5).sleep();
-    }
-    std::cout << "Somebody subscribed to /rrt_path topic. \nPublishing one last time after 30 seconds and exiting.\n";
-    ros::Duration(10).sleep();
-    for(int i=0;i<10;i++){
-        planner.publish_path();
-        ros::Duration(0.5).sleep();
-    }
-    
+    ros::spin();
     return 0;
 }

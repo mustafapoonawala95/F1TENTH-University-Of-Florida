@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+ 
+    <arg name="path_planner" default="A_star" />
+    <node name="pure_pursuit_controller_node" pkg="pure_pursuit_controller" type="pure_pursuit_controller_node" output="screen"/>
+
+    <group if="$(eval arg('path_planner') == 'dijkstra')">
+        <param name="planner_topic" value="/dijkstra_shortest_path"/>
+        <node pkg="motion_planning_dijkstra" type="motion_planning_dijkstra_node" name="motion_planning_dijkstra_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'A_star')">
+        <param name="planner_topic" value="/A_star_shortest_path"/>
+        <node name="motion_planning_A_star_node" pkg="motion_planning_A_star" type="motion_planning_A_star_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT')">
+        <param name="planner_topic" value="/rrt_path"/>
+        <node pkg="motion_planning_RRT" type="motion_planning_RRT_node" name="motion_planning_RRT_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT_star')">
+        <param name="planner_topic" value="/rrt_star_path"/>
+        <node pkg="motion_planning_RRT_star" type="motion_planning_RRT_star_node" name="motion_planning_RRT_star_node" output="screen"/>
+    </group>
+
+</launch>

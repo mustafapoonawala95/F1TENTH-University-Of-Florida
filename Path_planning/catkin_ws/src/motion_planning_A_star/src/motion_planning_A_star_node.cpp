@@ -1,7 +1,9 @@
 /* 
+@file: motion_planning_A_star_node.cpp
 @author: Mustafa Poonawala
-A* planner node, subscribes to /map topic and /move_base_simple/goal.
 
+A* planner node, subscribes to /map topic to get occupancy grid map, /gt_pose for car's position 
+and /move_base_simple/goal for goal position.
 */
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
@@ -82,8 +84,12 @@ class A_star_planner {
                         int rr,cc;
                         rr = r + j;
                         cc = c + k;
-                        int index = get_idx(rr,cc);
-                        indexes_to_fill.insert(index);      // Pushing into a set so indexes are not repeated. 
+                        if(rr<0 || rr >= rows_ || cc < 0 || cc >= cols_){
+                        }
+                        else{
+                            int index = get_idx(rr,cc);
+                            indexes_to_fill.insert(index);      // Pushing into a set so indexes are not repeated.
+                        } 
                     }
                 }
             }
@@ -158,6 +164,25 @@ class A_star_planner {
         int row = y/gridsize;
         source_index = get_idx(row, col); 
         //std::cout << "Source index is " << source_index << "\n";
+    }
+
+    void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
+        ROS_INFO("Map callback started. \n");
+        //float current_time = ros::Time::now().toSec();
+        rows_ = map->info.height;
+        std::cout << "rows_ from map height:= " << rows_ <<'\n';
+        cols_ = map->info.width;
+        std::cout << "cols_ from map width:= " << cols_ <<'\n';
+        gridsize = map->info.resolution;
+        std::cout << "Gridsize is: " << gridsize << "\n";
+        map_origin_x = map->info.origin.position.x;
+        map_origin_y = map->info.origin.position.y;
+        map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
+        inflate_obstacles();
+        //map_data_ = map->data;
+        std::cout << "Map origin x and y are: " << map_origin_x << ", " << map_origin_y <<"\n";
+        std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
+        << ", " << map->info.origin.orientation.w << "\n";
     }
 
     void destination_callback(const geometry_msgs::PoseStamped::ConstPtr& destination_point){
@@ -254,25 +279,6 @@ class A_star_planner {
             publish_path();
         }
 
-    }
-
-    void map_callback(const nav_msgs::OccupancyGrid::ConstPtr& map){
-        ROS_INFO("Map callback started. \n");
-        //float current_time = ros::Time::now().toSec();
-        rows_ = map->info.height;
-        std::cout << "rows_ from map height:= " << rows_ <<'\n';
-        cols_ = map->info.width;
-        std::cout << "cols_ from map width:= " << cols_ <<'\n';
-        gridsize = map->info.resolution;
-        std::cout << "Gridsize is: " << gridsize << "\n";
-        map_origin_x = map->info.origin.position.x;
-        map_origin_y = map->info.origin.position.y;
-        map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
-        inflate_obstacles();
-        //map_data_ = map->data;
-        std::cout << "Map origin x and y are: " << map_origin_x << ", " << map_origin_y <<"\n";
-        std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
-        << ", " << map->info.origin.orientation.w << "\n";
     }
 };
 

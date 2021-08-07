@@ -1593,57 +1593,57 @@ clean: motion_planning_RRT_star/CMakeFiles/motion_planning_RRT_star_node.dir/cle
 .PHONY : clean
 
 #=============================================================================
-# Directory level rules for directory motion_planning_test
+# Directory level rules for directory motion_planning_dijkstra
 
 # Convenience name for "all" pass in the directory.
-motion_planning_test/all: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/all
+motion_planning_dijkstra/all: motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/all
 
-.PHONY : motion_planning_test/all
+.PHONY : motion_planning_dijkstra/all
 
 # Convenience name for "clean" pass in the directory.
-motion_planning_test/clean: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/clean
+motion_planning_dijkstra/clean: motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/clean
 
-.PHONY : motion_planning_test/clean
+.PHONY : motion_planning_dijkstra/clean
 
 # Convenience name for "preinstall" pass in the directory.
-motion_planning_test/preinstall:
+motion_planning_dijkstra/preinstall:
 
-.PHONY : motion_planning_test/preinstall
+.PHONY : motion_planning_dijkstra/preinstall
 
 #=============================================================================
-# Target rules for target motion_planning_test/CMakeFiles/motion_planning_test_node.dir
+# Target rules for target motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir
 
 # All Build rule for target.
-motion_planning_test/CMakeFiles/motion_planning_test_node.dir/all:
-	$(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/depend
-	$(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/CMakeFiles --progress-num=18,19 "Built target motion_planning_test_node"
-.PHONY : motion_planning_test/CMakeFiles/motion_planning_test_node.dir/all
+motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/all:
+	$(MAKE) -f motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/depend
+	$(MAKE) -f motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/CMakeFiles --progress-num=18,19 "Built target motion_planning_dijkstra_node"
+.PHONY : motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/all
 
 # Include target in all.
-all: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/all
+all: motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule: cmake_check_build_system
+motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/CMakeFiles 0
-.PHONY : motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule
+.PHONY : motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/rule
 
 # Convenience name for target.
-motion_planning_test_node: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/rule
+motion_planning_dijkstra_node: motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/rule
 
-.PHONY : motion_planning_test_node
-
-# clean rule for target.
-motion_planning_test/CMakeFiles/motion_planning_test_node.dir/clean:
-	$(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/clean
-.PHONY : motion_planning_test/CMakeFiles/motion_planning_test_node.dir/clean
+.PHONY : motion_planning_dijkstra_node
 
 # clean rule for target.
-clean: motion_planning_test/CMakeFiles/motion_planning_test_node.dir/clean
+motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/clean:
+	$(MAKE) -f motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/clean
+.PHONY : motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/clean
+
+# clean rule for target.
+clean: motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/clean
 
 .PHONY : clean
 

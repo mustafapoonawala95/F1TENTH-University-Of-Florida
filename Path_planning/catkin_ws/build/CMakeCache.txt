@@ -400,6 +400,12 @@ motion_planning_RRT_star_BINARY_DIR:STATIC=/home/mustafa/F1TENTH_MotionPlanning/
 motion_planning_RRT_star_SOURCE_DIR:STATIC=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/src/motion_planning_RRT_star
 
 //Value Computed by CMake
+motion_planning_dijkstra_BINARY_DIR:STATIC=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_dijkstra
+
+//Value Computed by CMake
+motion_planning_dijkstra_SOURCE_DIR:STATIC=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/src/motion_planning_dijkstra
+
+//Value Computed by CMake
 motion_planning_test_BINARY_DIR:STATIC=/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_test
 
 //Value Computed by CMake

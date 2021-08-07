@@ -727,17 +727,17 @@ motion_planning_RRT_star_node/fast:
 .PHONY : motion_planning_RRT_star_node/fast
 
 #=============================================================================
-# Target rules for targets named motion_planning_test_node
+# Target rules for targets named motion_planning_dijkstra_node
 
 # Build rule for target.
-motion_planning_test_node: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 motion_planning_test_node
-.PHONY : motion_planning_test_node
+motion_planning_dijkstra_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 motion_planning_dijkstra_node
+.PHONY : motion_planning_dijkstra_node
 
 # fast build rule for target.
-motion_planning_test_node/fast:
-	$(MAKE) -f motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build.make motion_planning_test/CMakeFiles/motion_planning_test_node.dir/build
-.PHONY : motion_planning_test_node/fast
+motion_planning_dijkstra_node/fast:
+	$(MAKE) -f motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build.make motion_planning_dijkstra/CMakeFiles/motion_planning_dijkstra_node.dir/build
+.PHONY : motion_planning_dijkstra_node/fast
 
 #=============================================================================
 # Target rules for targets named tf2_msgs_generate_messages_py
@@ -1003,7 +1003,7 @@ help:
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... motion_planning_RRT_node"
 	@echo "... motion_planning_RRT_star_node"
-	@echo "... motion_planning_test_node"
+	@echo "... motion_planning_dijkstra_node"
 	@echo "... tf2_msgs_generate_messages_py"
 	@echo "... tf2_msgs_generate_messages_nodejs"
 	@echo "... tf2_msgs_generate_messages_eus"

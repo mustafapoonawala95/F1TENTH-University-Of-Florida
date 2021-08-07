@@ -3,7 +3,9 @@
 
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/src/motion_planning_test/src/motion_planning_test_node.cpp
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/Point.h
+motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/PointStamped.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/Pose.h
+motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseStamped.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseWithCovariance.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/Quaternion.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/geometry_msgs/Twist.h
@@ -15,6 +17,7 @@ motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_plannin
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/nav_msgs/MapMetaData.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/nav_msgs/OccupancyGrid.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/nav_msgs/Odometry.h
+motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/nav_msgs/Path.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/ros/advertise_options.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/ros/advertise_service_options.h
 motion_planning_test/CMakeFiles/motion_planning_test_node.dir/src/motion_planning_test_node.cpp.o: /opt/ros/melodic/include/ros/assert.h
