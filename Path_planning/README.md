@@ -4,7 +4,7 @@ Currently consists the implementation of the following path planning algorithms.
 1. Dijkstra's  
 2. A\*  
 3. RRT  
-4. RRT\*  
+4. RRT\*  <br/>
 Each path planning algorithm subscribes to the __/map__ topic for the occupancy grid map, __/gt_pose__ for the car's position and __/move_base_simple/goal__ for the goal position. The calculated path is then published on the appropriately named topic.<br/><br/>
 A pure pursuit path tracking controller and MapGenerator application that allows to generate simple .pgm images are also provided to evaluate algorithms on different types of maps without the need of sensors to create maps.
 
