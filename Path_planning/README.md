@@ -27,7 +27,7 @@ otherwise, no updates are made to *dist(u)*.
 
 The algorithm has visited all nodes in the graph and found the smallest distance to each node. *dist* now contains the shortest path tree from source *s*.
 
-The animation below illustrates the working of the algorithm.
+The animation below illustrates the working of the algorithm.  
 ![](images/Dijkstra_Animation.gif)
 
 ## RRT Vs A* algorithm. 
