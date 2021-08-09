@@ -47,8 +47,6 @@ The difference between the number of nodes searched by A\* and dijkstra can be s
 
 <img src="images/A_star_vs_dijkstra.png" width="750" height="500">
 
-
-
 ## RRT Vs A* algorithm. 
 ![](images/A_starVs_RRT.png)
 
