@@ -46,8 +46,6 @@ The animation below illustrates the working of the algorithm.
 Credit: Wikipedia
 </p>
 
-
-
 ## A\* algorithm.
 The implementation of the A\* algorithm is almost identical to the Dijkstra's algorithm. The only difference is that the metric for judging nodes is not solely based on the node's *dist* value, but the sum of *dist* and a heuristic *h*. The heuristic *h* of a node is an estiamte of the cost of reaching the goal from that node.  
 Let the quantity *f* = *dist* + *h*, then the priority in A\* will be evaluated on the basis of *f* instead of *dist* like in dijkstra. This way the next node to be searched (popped from the priority queue) will be the one with lowest *f*. This translates to the "Best first search" approach since the node with the lowest *f* is __likely__ to be the best. This reduces the number of nodes to be searched to find the path to the goal as nodes that are __less likely__ to be on the shortest path are searched less often.  <br/><br/>
@@ -73,12 +71,37 @@ The dijkstra's and A\* algorithm are search based algorithms, where the shortest
 Credit: Maurice Rahme
 </p>
 
+### RRT\*
+
+RRT\* is an optimized version of RRT. When the number of nodes approaches infinity, the RRT\* algorithm will deliver the shortest possible path to the goal. While realistically unfeasible, this statement suggests that the algorithm does work to develop a shortest path. The basic principle of RRT\* is the same as RRT, but two key additions to the algorithm result in significantly different results.
+
+* First, RRT\* records the distance each vertex has traveled relative to its parent vertex. This is referred to as the cos()of the vertex. There is no such cost matric for the nodes in RRT. After the closest node to a new randomly selected node is found in the graph, a neighborhood of vertices in a fixed radius from the new node are examined. If a node with a cheaper cost() than the closest node is found, the cheaper node replaces the closest node as the parent of the new node. The effect of this feature can be seen with the addition of fan shaped twigs in the tree structure. The cubic structure of RRT is eliminated.
+* The second difference RRT\* adds is the rewiring of the tree. After a vertex has been connected to the **cheapest** neighbor, the neighbors are again examined. Neighbors are checked if being rewired to the newly added vertex will make their cost decrease. If the cost does indeed decrease, the neighbor is rewired to the newly added vertex. This feature makes the path more smooth.
+
+<p align = "center">
+<img src="images/rrt_star.gif" width="500" height="500">
+</p>
+<p align = "center">
+Credit: Python Robotics (AtsushiSakai)
+</p>
+
 ## RRT Vs A* algorithm. 
-![](images/A_starVs_RRT.png)
+<p align = "center">
+<img src="images/A_starVs_RRT.png" width="700" height="500">
+</p>
+<p align = "center">
+A\* V/s RRT
+</p>
 
 ## RRT Vs RRT*                          
-RRT*: Red RRT: Blue
-![](images/RRT_Vs_RRT_Star.png)
+<p align = "center">
+<img src="images/RRT_Vs_RRT_Star.png" width="700" height="500">
+</p>
+<p align = "center">
+RRT: Blue RRT\*: Red
+</p>
 
 ## Pure Pursuit path tracking with path planned by A*.
-![](images/A_star_with_pure_pursuit.gif)
+<p align = "center">
+<img src="images/A_star_with_pure_pursuit.gif" width="700" height="500">
+</p>
