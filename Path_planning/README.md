@@ -93,7 +93,7 @@ Credit: Python Robotics (AtsushiSakai)
 <img src="images/A_starVs_RRT.png" width="700" height="500">
 </p>
 <p align = "center">
-A\* V/s RRT
+A* V/s RRT
 </p>
 
 ## RRT Vs RRT*                          
