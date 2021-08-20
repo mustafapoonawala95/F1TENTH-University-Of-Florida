@@ -54,6 +54,9 @@ The difference between the number of nodes searched by A\* and dijkstra can be s
 <p align = "center">
 <img src="images/A_star_vs_dijkstra.png" width="750" height="500">
 </p>
+<p align = "center">
+Credit: Kevin Wang
+</p>
 
 ## RRT algorithms.
 The dijkstra's and A\* algorithm are search based algorithms, where the shortest path to the goal is searched from the existing nodes. RRT and RRT\* are sampling based algorithms that do not use an existing graph of the map but create a tree structure by sampling from the continuous configuration space.
@@ -75,7 +78,7 @@ Credit: Maurice Rahme
 
 RRT\* is an optimized version of RRT. When the number of nodes approaches infinity, the RRT\* algorithm will deliver the shortest possible path to the goal. While realistically unfeasible, this statement suggests that the algorithm does work to develop a shortest path. The basic principle of RRT\* is the same as RRT, but two key additions to the algorithm result in significantly different results.
 
-* First, RRT\* records the distance each vertex has traveled relative to its parent vertex. This is referred to as the cos()of the vertex. There is no such cost matric for the nodes in RRT. After the closest node to a new randomly selected node is found in the graph, a neighborhood of vertices in a fixed radius from the new node are examined. If a node with a cheaper cost() than the closest node is found, the cheaper node replaces the closest node as the parent of the new node. The effect of this feature can be seen with the addition of fan shaped twigs in the tree structure. The cubic structure of RRT is eliminated.
+* First, RRT\* records the distance each vertex has traveled relative to its parent vertex. This is referred to as the cos() of the vertex. There is no such cost matric for the nodes in RRT. After the closest node to a new randomly selected node is found in the graph, a neighborhood of vertices in a fixed radius from the new node are examined. If a node with a cheaper cost() than the closest node is found, the cheaper node replaces the closest node as the parent of the new node. The effect of this feature can be seen with the addition of fan shaped twigs in the tree structure. The cubic structure of RRT is eliminated.
 * The second difference RRT\* adds is the rewiring of the tree. After a vertex has been connected to the **cheapest** neighbor, the neighbors are again examined. Neighbors are checked if being rewired to the newly added vertex will make their cost decrease. If the cost does indeed decrease, the neighbor is rewired to the newly added vertex. This feature makes the path more smooth.
 
 <p align = "center">
@@ -98,7 +101,7 @@ A\* V/s RRT
 <img src="images/RRT_Vs_RRT_Star.png" width="700" height="500">
 </p>
 <p align = "center">
-RRT: Blue RRT\*: Red
+RRT: Blue RRT*: Red
 </p>
 
 ## Pure Pursuit path tracking with path planned by A*.
