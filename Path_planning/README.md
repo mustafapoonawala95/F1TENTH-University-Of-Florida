@@ -109,10 +109,10 @@ RRT: Blue RRT*: Red
 
 ## Pure Pursuit path tracking with path planned by A*.
 <p align = "center">
-<img src="images/A_star_with_pure_pursuit.gif" width="700" height="500">
+<img src="images/A_star_with_pure_pursuit.gif" width="850" height="600">
 </p>
 
 ## Follow the gap algorithm.
 <p align = "center">
-<img src="images/follow_the_gap.gif" width="700" height="500">
+<img src="images/follow_the_gap.gif" width="850" height="600">
 </p>
