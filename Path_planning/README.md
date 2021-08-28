@@ -1,15 +1,18 @@
 # Motion Planning.
 
-Currently consists the implementation of the following path planning algorithms.   
+Currently consists the implementation of the following algorithms.   
 1. Dijkstra's  
 2. A\*  
 3. RRT  
-4. RRT\*  <br/>
+4. RRT\*  
+5. Pure Pursuit path tracking.  
+6. "Follow the gap" reactive control.  <br/>
+
 
 <!-- -->
 
 Each path planning algorithm subscribes to the __/map__ topic for the occupancy grid map, __/gt_pose__ for the car's position and __/move_base_simple/goal__ for the goal position. The calculated path is then published on the appropriately named topic.<br/><br/>
-A pure pursuit path tracking controller and MapGenerator application that allows to generate simple .pgm images are also provided to evaluate algorithms on different types of maps without the need of sensors to create maps.
+
 
 
 ## Dijkstra's algorithm.
@@ -107,4 +110,9 @@ RRT: Blue RRT*: Red
 ## Pure Pursuit path tracking with path planned by A*.
 <p align = "center">
 <img src="images/A_star_with_pure_pursuit.gif" width="700" height="500">
+</p>
+
+## Follow the gap algorithm.
+<p align = "center">
+<img src="images/follow_the_gap.gif" width="700" height="500">
 </p>

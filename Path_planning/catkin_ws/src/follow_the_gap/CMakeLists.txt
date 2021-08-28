@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(motion_planning_test)
+project(follow_the_gap)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,9 +8,12 @@ project(motion_planning_test)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  geometry_msgs
   nav_msgs
   roscpp
   std_msgs
+  tf2
+  tf2_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,7 +73,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   nav_msgs#   std_msgs
+#   nav_msgs#   sensor_msgs#   std_msgs
 # )
 
 ################################################
@@ -104,8 +107,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES motion_planning_test
-#  CATKIN_DEPENDS nav_msgs roscpp std_msgs
+#  LIBRARIES follow_the_gap
+#  CATKIN_DEPENDS nav_msgs roscpp sensor_msgs std_msgs tf2 tf2_ros
 #  DEPENDS system_lib
 )
 
@@ -122,7 +125,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/motion_planning_test.cpp
+#   src/${PROJECT_NAME}/follow_the_gap.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -133,7 +136,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/motion_planning_test_node.cpp)
+add_executable(${PROJECT_NAME}_node src/follow_the_gap_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -147,7 +150,7 @@ add_executable(${PROJECT_NAME}_node src/motion_planning_test_node.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
-  ${catkin_LIBRARIES}
+   ${catkin_LIBRARIES}
 )
 
 #############
@@ -197,7 +200,7 @@ target_link_libraries(${PROJECT_NAME}_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_motion_planning_test.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_follow_the_gap.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

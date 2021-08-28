@@ -1,2 +1,0 @@
-/usr/bin/ar qc libMyImage.a  CMakeFiles/MyImage.dir/src/MyImage.cpp.o
-/usr/bin/ranlib libMyImage.a
