@@ -91,13 +91,13 @@ RRT\* is an optimized version of RRT. When the number of nodes approaches infini
 Credit: Python Robotics (AtsushiSakai)
 </p>
 
-## RRT Vs A* algorithm. 
+<!--## RRT Vs A* algorithm. 
 <p align = "center">
 <img src="images/A_starVs_RRT.png" width="700" height="500">
 </p>
 <p align = "center">
 A* V/s RRT
-</p>
+</p>-->
 
 ## RRT Vs RRT*                          
 <p align = "center">
@@ -107,7 +107,13 @@ A* V/s RRT
 RRT: Blue RRT*: Red
 </p>
 
-## Pure Pursuit path tracking with path planned by A*.
+<!--## RRT Vs A\*, RRT V/s RRT\*.
+<p float="center">
+  <img src="images/A_starVs_RRT.png" width="400" height="300"/> 
+  <img src="images/RRT_Vs_RRT_Star.png" width="400" height="300"/>
+</p>-->
+
+<!--## Pure Pursuit path tracking with path planned by A*.
 <p align = "center">
 <img src="images/A_star_with_pure_pursuit.gif" width="850" height="600">
 </p>
@@ -115,4 +121,11 @@ RRT: Blue RRT*: Red
 ## Follow the gap algorithm.
 <p align = "center">
 <img src="images/follow_the_gap.gif" width="850" height="600">
+</p>-->
+
+## 1) Pure Pursuit. 2) Follow the gap.
+<p float="center">
+  <img src="images/A_star_with_pure_pursuit.gif" width="450" height="300"/> 
+  <img src="images/follow_the_gap.gif" width="450" height="300"/>
 </p>
+
