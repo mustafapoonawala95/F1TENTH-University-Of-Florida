@@ -125,7 +125,7 @@ RRT: Blue RRT*: Red
 
 ## 1) Pure Pursuit. 2) Follow the gap.
 <p float="center">
-  <img src="images/A_star_with_pure_pursuit.gif" width="450" height="300"/> 
-  <img src="images/follow_the_gap.gif" width="450" height="300"/>
+  <img src="images/A_star_with_pure_pursuit.gif" width="550" height="400"/> 
+  <img src="images/follow_the_gap.gif" width="550" height="400"/>
 </p>
 
