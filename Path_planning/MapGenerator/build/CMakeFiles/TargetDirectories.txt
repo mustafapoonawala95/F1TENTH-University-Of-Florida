@@ -1,5 +1,0 @@
-/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/build/CMakeFiles/rebuild_cache.dir
-/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/build/CMakeFiles/MapGenerator.dir
-/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/build/CMakeFiles/edit_cache.dir
-/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/build/CMakeFiles/io_tools.dir
-/home/mustafa/F1TENTH_MotionPlanning/MapGenerator/build/CMakeFiles/MyImage.dir

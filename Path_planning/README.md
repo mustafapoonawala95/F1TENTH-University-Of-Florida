@@ -1,15 +1,18 @@
 # Motion Planning.
 
-Currently consists the implementation of the following path planning algorithms.   
+Currently consists the implementation of the following algorithms.   
 1. Dijkstra's  
 2. A\*  
 3. RRT  
-4. RRT\*  <br/>
+4. RRT\*  
+5. Pure Pursuit path tracking.  
+6. "Follow the gap" reactive control.  <br/>
+
 
 <!-- -->
 
 Each path planning algorithm subscribes to the __/map__ topic for the occupancy grid map, __/gt_pose__ for the car's position and __/move_base_simple/goal__ for the goal position. The calculated path is then published on the appropriately named topic.<br/><br/>
-A pure pursuit path tracking controller and MapGenerator application that allows to generate simple .pgm images are also provided to evaluate algorithms on different types of maps without the need of sensors to create maps.
+
 
 
 ## Dijkstra's algorithm.
@@ -88,13 +91,13 @@ RRT\* is an optimized version of RRT. When the number of nodes approaches infini
 Credit: Python Robotics (AtsushiSakai)
 </p>
 
-## RRT Vs A* algorithm. 
+<!--## RRT Vs A* algorithm. 
 <p align = "center">
 <img src="images/A_starVs_RRT.png" width="700" height="500">
 </p>
 <p align = "center">
 A* V/s RRT
-</p>
+</p>-->
 
 ## RRT Vs RRT*                          
 <p align = "center">
@@ -104,7 +107,25 @@ A* V/s RRT
 RRT: Blue RRT*: Red
 </p>
 
-## Pure Pursuit path tracking with path planned by A*.
+<!--## RRT Vs A\*, RRT V/s RRT\*.
+<p float="center">
+  <img src="images/A_starVs_RRT.png" width="400" height="300"/> 
+  <img src="images/RRT_Vs_RRT_Star.png" width="400" height="300"/>
+</p>-->
+
+<!--## Pure Pursuit path tracking with path planned by A*.
 <p align = "center">
-<img src="images/A_star_with_pure_pursuit.gif" width="700" height="500">
+<img src="images/A_star_with_pure_pursuit.gif" width="850" height="600">
 </p>
+
+## Follow the gap algorithm.
+<p align = "center">
+<img src="images/follow_the_gap.gif" width="850" height="600">
+</p>-->
+
+## 1) Pure Pursuit. 2) Follow the gap.
+<p float="center">
+  <img src="images/A_star_with_pure_pursuit.gif" width="500" height="400"/> 
+  <img src="images/follow_the_gap.gif" width="500" height="400"/>
+</p>
+
