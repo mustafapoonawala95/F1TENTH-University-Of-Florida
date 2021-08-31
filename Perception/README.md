@@ -13,5 +13,5 @@ YOLO, stands for You Only Look Once, is an algorithm where objects are detected 
 The network architecture is inspired by the GoogLeNet model for image classification. Our network has 24 convolutional layers followed by 2 fully connected layers. Instead of the inception modules used by GoogLeNet, we simply use 1 × 1 reduction layers followed by 3 × 3 convolutional layers. The architecture is shown below.
 
 <p align = "center">
-<img src="images/yolo_architecture.jpg" width="953" height="410">
+<img src="images/yolo_architecture.jpg" width="550" height="310">
 </p>
