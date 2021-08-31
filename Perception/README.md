@@ -19,4 +19,4 @@ The architecture is shown below.
 
 # Training 
 
-Currently the model is being trained on PASCAL VOC YOLO dataset on kaggle. mAP close to 70% was being achieved after training for 45 epochs
+Currently the model is being trained on PASCAL VOC YOLO dataset on kaggle. mAP close to 70% was being achieved after training for 45 epochs using loss function Adam. Results will be added soon.
