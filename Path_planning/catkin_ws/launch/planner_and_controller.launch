@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <launch>
- 
+    <!--Loading parameter-->
+    <param name="lookahead_distance_" value="0.9"/>
+    
     <arg name="path_planner" default="A_star" />
     <node name="pure_pursuit_controller_node" pkg="pure_pursuit_controller" type="pure_pursuit_controller_node" output="screen"/>
-
+    
     <group if="$(eval arg('path_planner') == 'dijkstra')">
         <param name="planner_topic" value="/dijkstra_shortest_path"/>
         <node pkg="motion_planning_dijkstra" type="motion_planning_dijkstra_node" name="motion_planning_dijkstra_node" output="screen"/>
@@ -23,5 +25,4 @@
         <param name="planner_topic" value="/rrt_star_path"/>
         <node pkg="motion_planning_RRT_star" type="motion_planning_RRT_star_node" name="motion_planning_RRT_star_node" output="screen"/>
     </group>
-
 </launch>

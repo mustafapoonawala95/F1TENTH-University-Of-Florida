@@ -56,17 +56,17 @@ CMAKE_BINARY_DIR = /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
 
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -77,28 +77,6 @@ list_install_components:
 list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
 
 # Special rule for the target install/local
 install/local: preinstall
@@ -112,6 +90,28 @@ install/local/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -123,17 +123,17 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
 
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,94 +168,34 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
+pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
+.PHONY : pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
-tf2_msgs_generate_messages_py: pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/rule
+ackermann_msgs_generate_messages_cpp: pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
 
-.PHONY : tf2_msgs_generate_messages_py
+.PHONY : ackermann_msgs_generate_messages_cpp
 
 # fast build rule for target.
-tf2_msgs_generate_messages_py/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/build.make pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
-.PHONY : tf2_msgs_generate_messages_py/fast
+ackermann_msgs_generate_messages_cpp/fast:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/build.make pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/build
+.PHONY : ackermann_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
-pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
+pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
+.PHONY : pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
-tf2_msgs_generate_messages_nodejs: pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/rule
+ackermann_msgs_generate_messages_lisp: pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
 
-.PHONY : tf2_msgs_generate_messages_nodejs
+.PHONY : ackermann_msgs_generate_messages_lisp
 
 # fast build rule for target.
-tf2_msgs_generate_messages_nodejs/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build.make pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/build
-.PHONY : tf2_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_eus: pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_eus
-
-# fast build rule for target.
-tf2_msgs_generate_messages_eus/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build.make pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_eus.dir/build
-.PHONY : tf2_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_nodejs: pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/rule
-
-.PHONY : actionlib_generate_messages_nodejs
-
-# fast build rule for target.
-actionlib_generate_messages_nodejs/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/build.make pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_nodejs.dir/build
-.PHONY : actionlib_generate_messages_nodejs/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_lisp: pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_lisp
-
-# fast build rule for target.
-tf2_msgs_generate_messages_lisp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build.make pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_lisp.dir/build
-.PHONY : tf2_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_py: pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/rule
-
-.PHONY : actionlib_generate_messages_py
-
-# fast build rule for target.
-actionlib_generate_messages_py/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/build.make pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_py.dir/build
-.PHONY : actionlib_generate_messages_py/fast
+ackermann_msgs_generate_messages_lisp/fast:
+	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/build.make pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/build
+.PHONY : ackermann_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_nodejs.dir/rule:
@@ -273,51 +213,6 @@ ackermann_msgs_generate_messages_nodejs/fast:
 .PHONY : ackermann_msgs_generate_messages_nodejs/fast
 
 # Convenience name for target.
-pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_cpp: pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/rule
-
-.PHONY : actionlib_generate_messages_cpp
-
-# fast build rule for target.
-actionlib_generate_messages_cpp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/build.make pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_cpp.dir/build
-.PHONY : actionlib_generate_messages_cpp/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-tf2_msgs_generate_messages_cpp: pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : tf2_msgs_generate_messages_cpp
-
-# fast build rule for target.
-tf2_msgs_generate_messages_cpp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build.make pure_pursuit_controller/CMakeFiles/tf2_msgs_generate_messages_cpp.dir/build
-.PHONY : tf2_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_eus: pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/rule
-
-.PHONY : actionlib_generate_messages_eus
-
-# fast build rule for target.
-actionlib_generate_messages_eus/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/build.make pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_eus.dir/build
-.PHONY : actionlib_generate_messages_eus/fast
-
-# Convenience name for target.
 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_py.dir/rule:
 	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_py.dir/rule
 .PHONY : pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_py.dir/rule
@@ -331,21 +226,6 @@ ackermann_msgs_generate_messages_py: pure_pursuit_controller/CMakeFiles/ackerman
 ackermann_msgs_generate_messages_py/fast:
 	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_py.dir/build.make pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_py.dir/build
 .PHONY : ackermann_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-ackermann_msgs_generate_messages_cpp: pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : ackermann_msgs_generate_messages_cpp
-
-# fast build rule for target.
-ackermann_msgs_generate_messages_cpp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/build.make pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_cpp.dir/build
-.PHONY : ackermann_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_eus.dir/rule:
@@ -363,21 +243,6 @@ ackermann_msgs_generate_messages_eus/fast:
 .PHONY : ackermann_msgs_generate_messages_eus/fast
 
 # Convenience name for target.
-pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-actionlib_generate_messages_lisp: pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/rule
-
-.PHONY : actionlib_generate_messages_lisp
-
-# fast build rule for target.
-actionlib_generate_messages_lisp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/build.make pure_pursuit_controller/CMakeFiles/actionlib_generate_messages_lisp.dir/build
-.PHONY : actionlib_generate_messages_lisp/fast
-
-# Convenience name for target.
 pure_pursuit_controller/CMakeFiles/pure_pursuit_controller_node.dir/rule:
 	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/pure_pursuit_controller_node.dir/rule
 .PHONY : pure_pursuit_controller/CMakeFiles/pure_pursuit_controller_node.dir/rule
@@ -391,21 +256,6 @@ pure_pursuit_controller_node: pure_pursuit_controller/CMakeFiles/pure_pursuit_co
 pure_pursuit_controller_node/fast:
 	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/pure_pursuit_controller_node.dir/build.make pure_pursuit_controller/CMakeFiles/pure_pursuit_controller_node.dir/build
 .PHONY : pure_pursuit_controller_node/fast
-
-# Convenience name for target.
-pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
-.PHONY : pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-ackermann_msgs_generate_messages_lisp: pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : ackermann_msgs_generate_messages_lisp
-
-# fast build rule for target.
-ackermann_msgs_generate_messages_lisp/fast:
-	cd /home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build && $(MAKE) -f pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/build.make pure_pursuit_controller/CMakeFiles/ackermann_msgs_generate_messages_lisp.dir/build
-.PHONY : ackermann_msgs_generate_messages_lisp/fast
 
 src/pure_pursuit_controller_node.o: src/pure_pursuit_controller_node.cpp.o
 
@@ -440,29 +290,19 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install"
-	@echo "... list_install_components"
-	@echo "... rebuild_cache"
-	@echo "... test"
-	@echo "... tf2_msgs_generate_messages_py"
-	@echo "... install/local"
-	@echo "... tf2_msgs_generate_messages_nodejs"
-	@echo "... edit_cache"
-	@echo "... tf2_msgs_generate_messages_eus"
-	@echo "... actionlib_generate_messages_nodejs"
-	@echo "... tf2_msgs_generate_messages_lisp"
-	@echo "... actionlib_generate_messages_py"
-	@echo "... ackermann_msgs_generate_messages_nodejs"
-	@echo "... actionlib_generate_messages_cpp"
 	@echo "... install/strip"
-	@echo "... tf2_msgs_generate_messages_cpp"
-	@echo "... actionlib_generate_messages_eus"
-	@echo "... ackermann_msgs_generate_messages_py"
+	@echo "... list_install_components"
+	@echo "... install/local"
+	@echo "... test"
+	@echo "... rebuild_cache"
 	@echo "... ackermann_msgs_generate_messages_cpp"
-	@echo "... ackermann_msgs_generate_messages_eus"
-	@echo "... actionlib_generate_messages_lisp"
-	@echo "... pure_pursuit_controller_node"
+	@echo "... edit_cache"
 	@echo "... ackermann_msgs_generate_messages_lisp"
+	@echo "... install"
+	@echo "... ackermann_msgs_generate_messages_nodejs"
+	@echo "... ackermann_msgs_generate_messages_py"
+	@echo "... ackermann_msgs_generate_messages_eus"
+	@echo "... pure_pursuit_controller_node"
 	@echo "... src/pure_pursuit_controller_node.o"
 	@echo "... src/pure_pursuit_controller_node.i"
 	@echo "... src/pure_pursuit_controller_node.s"

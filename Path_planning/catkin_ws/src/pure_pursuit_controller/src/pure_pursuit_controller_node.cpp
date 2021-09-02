@@ -17,16 +17,17 @@ Pure pursuit controller node, subscribes to path planner topic loaded in the par
 
 // A couple of global variables.
 tf2_ros::Buffer tf_buffer;
-std::string planner_topic;
 
 class pure_pursuit_controller {
 
     private:
 
+    ros::NodeHandle node_handle_;
     ros::Subscriber path_subscriber;
     ros::Subscriber car_pose_subscriber;
     ros::Publisher drive_command_publisher;
     nav_msgs::Path path_to_track_map_frame_;
+    std::string planner_topic;
     float lookahead_distance_;
     int path_seq_;
     int path_size_;
@@ -70,11 +71,14 @@ class pure_pursuit_controller {
         drive_command_publisher.publish(drive_command);
     }
 
-    pure_pursuit_controller(ros::NodeHandle *nh){
-        path_subscriber = nh->subscribe(planner_topic, 1, &pure_pursuit_controller::path_subscriber_callback,this);
-        car_pose_subscriber = nh->subscribe("/gt_pose", 100, &pure_pursuit_controller::car_pose_callback,this);
-        drive_command_publisher = nh->advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 100);
-        lookahead_distance_ = 0.9;   // 0.9 is optimum for max speed 5.
+    pure_pursuit_controller(){
+        node_handle_ = ros::NodeHandle();
+        node_handle_.getParam("planner_topic",planner_topic);   // Getting planner topic from parameter server.
+        node_handle_.getParam("lookahead_distance_",lookahead_distance_);
+        path_subscriber = node_handle_.subscribe(planner_topic, 1, &pure_pursuit_controller::path_subscriber_callback,this);
+        car_pose_subscriber = node_handle_.subscribe("/gt_pose", 100, &pure_pursuit_controller::car_pose_callback,this);
+        drive_command_publisher = node_handle_.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 100);
+        // = 0.9;   // 0.9 is optimum for max speed 5.
         path_seq_ = 0;
         ros::Duration(1.0).sleep();// Waiting for 1sec for the tf buffer to fill up so that transforms can be found by lookupTransform().
         current_best_waypoint_seq = 0;
@@ -82,16 +86,16 @@ class pure_pursuit_controller {
         goal_threshold_distance_ = 0.5;
     }
 
-    void path_subscriber_callback(const nav_msgs::Path::ConstPtr& A_star_path){
+    void path_subscriber_callback(const nav_msgs::Path::ConstPtr& planner_path){
         //Fetching the path published by planner and saving as class attribute.
-        path_size_ = A_star_path->poses.size();
-        std::cout << "path size from A_star is: " << path_size_ <<"\n";
+        path_size_ = planner_path->poses.size();
+        std::cout << "path size from " << planner_topic << "is: " << path_size_ <<"\n";
         std::vector<geometry_msgs::PoseStamped> temp_poses(path_size_);
         std::vector<geometry_msgs::PoseStamped> dense_temp_poses;
         for(int i=0; i<path_size_; i++){
-            temp_poses[i].pose.position.x = A_star_path->poses[i].pose.position.x;
-            temp_poses[i].pose.position.y = A_star_path->poses[i].pose.position.y;
-            temp_poses[i].pose.position.z = A_star_path->poses[i].pose.position.z;
+            temp_poses[i].pose.position.x = planner_path->poses[i].pose.position.x;
+            temp_poses[i].pose.position.y = planner_path->poses[i].pose.position.y;
+            temp_poses[i].pose.position.z = planner_path->poses[i].pose.position.z;
             temp_poses[i].header.seq = i;        
         }
         //std::cout << "Adding first element to temp poses.\n";
@@ -113,16 +117,16 @@ class pure_pursuit_controller {
         }
         //std::cout << "Created dense_temp_poses succesfully.\n"; 
         geometry_msgs::PoseStamped final_point;
-        final_point.pose.position.x = A_star_path->poses.back().pose.position.x;
-        final_point.pose.position.y = A_star_path->poses.back().pose.position.y;
+        final_point.pose.position.x = planner_path->poses.back().pose.position.x;
+        final_point.pose.position.y = planner_path->poses.back().pose.position.y;
         final_point.pose.position.z = 0.0;
         final_point.header.seq = dense_temp_poses.back().header.seq + 1;
         dense_temp_poses.push_back(final_point);
         //std::cout << "Added final goal point to dense_temp_poses succesfully.\n";
         path_to_track_map_frame_.header.frame_id = "map";
         path_to_track_map_frame_.poses = dense_temp_poses;
-        goal_point_.first = A_star_path->poses[(path_size_-1)].pose.position.x;
-        goal_point_.second = A_star_path->poses[(path_size_-1)].pose.position.y;
+        goal_point_.first = planner_path->poses[(path_size_-1)].pose.position.x;
+        goal_point_.second = planner_path->poses[(path_size_-1)].pose.position.y;
         path_size_ = path_to_track_map_frame_.poses.size();
         std::cout << "Dense path size is: " << path_size_ << "\n";
         //std::cout << "Dense path_to_track_map_frame created succesfully.\n";
@@ -228,11 +232,9 @@ class pure_pursuit_controller {
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "pure_pursuit_controller_node");
-    ros::NodeHandle nh;
-    nh.getParam("planner_topic",planner_topic);   // Getting planner topic from parameter server.
     tf2_ros::TransformListener tf2_listener(tf_buffer);
     //tf2_ros::Buffer A_buffer;
-    pure_pursuit_controller pp_controller = pure_pursuit_controller(&nh);
+    pure_pursuit_controller pp_controller;
     ros::spin();
     return 0;
 }

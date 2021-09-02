@@ -22,6 +22,7 @@ and /move_base_simple/goal for goal position.
 class A_star_planner {
     private:
 
+    ros::NodeHandle node_handle_;
     ros::Subscriber map_subscriber;
     ros::Subscriber car_pose_subscriber;
     ros::Subscriber destination_subscriber;
@@ -54,11 +55,12 @@ class A_star_planner {
 
     public:
         
-    A_star_planner(ros::NodeHandle *nh) {
-        map_subscriber = nh->subscribe("/map", 1, &A_star_planner::map_callback, this);
-        car_pose_subscriber = nh->subscribe("/gt_pose", 1, &A_star_planner::car_pose_callback, this);
-        destination_subscriber = nh->subscribe("/move_base_simple/goal", 1, &A_star_planner::destination_callback, this);
-        path_publisher = nh->advertise<nav_msgs::Path>("/A_star_shortest_path", 1);
+    A_star_planner(){
+        node_handle_ = ros::NodeHandle();
+        map_subscriber = node_handle_.subscribe("/map", 1, &A_star_planner::map_callback, this);
+        car_pose_subscriber = node_handle_.subscribe("/gt_pose", 1, &A_star_planner::car_pose_callback, this);
+        destination_subscriber = node_handle_.subscribe("/move_base_simple/goal", 1, &A_star_planner::destination_callback, this);
+        path_publisher = node_handle_.advertise<nav_msgs::Path>("/A_star_shortest_path", 1);
 
         rows_ = 1;
         cols_ = 1;
@@ -284,8 +286,7 @@ class A_star_planner {
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "motion_planning_A_star_node");
-    ros::NodeHandle nh;
-    A_star_planner planner = A_star_planner(&nh);
+    A_star_planner planner;
     ros::Duration(1).sleep();
     ros::spin();
     return 0;

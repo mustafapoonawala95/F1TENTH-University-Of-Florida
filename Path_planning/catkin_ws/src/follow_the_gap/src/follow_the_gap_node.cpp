@@ -20,7 +20,6 @@ ADD DESCRIPTION.
 
 // Some global variables.
 tf2_ros::Buffer tf_buffer;
-std::string planner_topic;
 const float PI = 3.14159;
 
 class follow_the_gap {
@@ -43,6 +42,7 @@ class follow_the_gap {
     int sliding_window_length_;
     float safety_angle_;
     float buffer_angle_scaling_factor_;
+    std::string planner_topic_;
 
     public:
 
@@ -61,7 +61,6 @@ class follow_the_gap {
         field_of_view_max_angle = original_scan->angle_min + fov_max_id*original_scan->angle_increment;
         //std::cout << "fov_min_id: " << fov_min_id <<"\n";
         //std::cout << "fov_max_id: " << fov_max_id <<"\n";
-
         return std::vector<float>(original_scan->ranges.begin() + fov_min_id,original_scan->ranges.begin() + fov_max_id);
     }
 
@@ -146,7 +145,7 @@ class follow_the_gap {
 
     follow_the_gap(){
         node_handle_ = ros::NodeHandle();
-        node_handle_.getParam("planner_topic",planner_topic);   // Getting planner topic from parameter server.
+        node_handle_.getParam("planner_topic_",planner_topic_);   // Getting planner topic from parameter server.
         node_handle_.getParam("obstacle_distance_threshold_",obstacle_distance_threshold_);
         node_handle_.getParam("field_of_view_angle_degrees_",field_of_view_angle_degrees_);
         node_handle_.getParam("lookahead_distance_",lookahead_distance_);
@@ -228,7 +227,7 @@ int main(int argc, char **argv){
 
     ros::init(argc, argv, "follow_the_gap_node");
     tf2_ros::TransformListener tf2_listener(tf_buffer);
-    follow_the_gap ftg;// = follow_the_gap();
+    follow_the_gap ftg;
     //ros::Duration(1.0).sleep();
     std::cout << "Follow the gap node created!!\n";
     ros::spin();

@@ -135,7 +135,9 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_RRT/cmake_install.cmake")
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_RRT_star/cmake_install.cmake")
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/motion_planning_dijkstra/cmake_install.cmake")
+  include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/follow_the_gap/cmake_install.cmake")
   include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/pure_pursuit_controller/cmake_install.cmake")
+  include("/home/mustafa/F1TENTH_MotionPlanning/catkin_ws/build/pure_pursuit_obstacle_avoidance/cmake_install.cmake")
 
 endif()
 

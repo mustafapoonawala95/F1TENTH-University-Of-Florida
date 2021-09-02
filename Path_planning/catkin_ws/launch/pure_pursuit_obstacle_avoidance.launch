@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+ 
+    <!-- Loading parameters-->
+    <param name="obstacle_distance_threshold_" value="4.0"/>
+    <param name="field_of_view_angle_degrees_" value="180.0"/>
+    <param name="lookahead_distance_" value="0.9"/>
+    <param name="safety_bubble_radius_" value="1.5"/>    <!--1.5 for levine hall, 3 for columbia--> 
+    <param name="sliding_window_length_" value="5"/>
+    <param name="safety_angle_" value="20.00"/> 
+    <param name="buffer_angle_scaling_factor_" value="7.0"/>   <!--6.5 for columbia-->
+
+    <!--Launching the node-->
+    <node name="pure_pursuit_obstacle_avoidance_node" pkg="pure_pursuit_obstacle_avoidance" type="pure_pursuit_obstacle_avoidance_node" output="screen"/>
+
+</launch>
