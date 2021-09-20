@@ -100,13 +100,15 @@ class pure_pursuit_controller {
         }
         //std::cout << "Adding first element to temp poses.\n";
         dense_temp_poses.push_back(temp_poses[0]);
+        float point_spacing = 0.1;
         //std::cout << "First element added to temp poses.\n"; 
         for(int i=1;i<path_size_;i++){
-            while(dist(dense_temp_poses.back(),temp_poses[i])>lookahead_distance_){
+            while(dist(dense_temp_poses.back(),temp_poses[i])>=point_spacing){ // point_spacing was lookahead_distance_ earlier.
                 float DY = temp_poses[i].pose.position.y - dense_temp_poses.back().pose.position.y;
                 float DX = temp_poses[i].pose.position.x - dense_temp_poses.back().pose.position.x; 
                 float slope = DY/DX;
-                float t = lookahead_distance_/(sqrt((DX*DX) + (DY*DY)));
+                //float t = lookahead_distance_/(sqrt((DX*DX) + (DY*DY)));
+                float t = point_spacing/(sqrt((DX*DX) + (DY*DY)));
                 geometry_msgs::PoseStamped pose_to_add;
                 pose_to_add.pose.position.x = (1 - t)*dense_temp_poses.back().pose.position.x + t*temp_poses[i].pose.position.x;
                 pose_to_add.pose.position.y = (1 - t)*dense_temp_poses.back().pose.position.y + t*temp_poses[i].pose.position.y;
