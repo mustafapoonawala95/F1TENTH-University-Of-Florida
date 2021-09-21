@@ -100,7 +100,7 @@ class pure_pursuit_controller {
         }
         //std::cout << "Adding first element to temp poses.\n";
         dense_temp_poses.push_back(temp_poses[0]);
-        float point_spacing = 0.05;
+        float point_spacing = 0.5;
         //std::cout << "First element added to temp poses.\n"; 
         for(int i=1;i<path_size_;i++){
             while(dist(dense_temp_poses.back(),temp_poses[i])>point_spacing){ // point_spacing was lookahead_distance_ earlier.
@@ -153,7 +153,7 @@ class pure_pursuit_controller {
                 //map_to_car_frame.transform.translation.y << "\n";
             }
             catch (tf2::TransformException &ex) {
-                std::cout << "blah blah\n";
+                //std::cout << "Cannot find transform between baselink and map.\n";
                 ROS_WARN("%s",ex.what());
                 ros::Duration(1.0).sleep();
             }
