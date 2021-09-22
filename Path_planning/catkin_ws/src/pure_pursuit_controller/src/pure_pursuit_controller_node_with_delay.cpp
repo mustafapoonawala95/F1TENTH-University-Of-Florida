@@ -39,7 +39,12 @@ class pure_pursuit_controller {
     bool path_detected;
     std::pair<float,float> goal_point_;
     float goal_threshold_distance_;
-
+    //===================================
+    int iterations_of_delay_;
+    int iterations_to_delay_;
+    float prev_steering_angle_;
+    float prev_velocity_;
+    //===================================
     public:
     
     int goal_closeness(std::pair<float,float> car_position){
@@ -84,6 +89,8 @@ class pure_pursuit_controller {
         current_best_waypoint_seq = 0;
         path_detected = false;
         goal_threshold_distance_ = 0.5;
+        iterations_of_delay_ = 40;
+        iterations_to_delay_ = 40;
     }
 
     void path_subscriber_callback(const nav_msgs::Path::ConstPtr& planner_path){
@@ -234,7 +241,7 @@ class pure_pursuit_controller {
 
     void car_pose_callback(const geometry_msgs::PoseStamped::ConstPtr& car_pose){
      // Pure pursuit algorithm implemented here.
-        if(path_detected){
+        if(path_detected && (iterations_of_delay_==iterations_to_delay_)){
             double car_x = car_pose->pose.position.x;
             double car_y = car_pose->pose.position.y;
             double target_point_x = 0.0;
@@ -373,13 +380,24 @@ class pure_pursuit_controller {
                 drive_command.header.stamp = ros::Time::now();
                 drive_command.header.frame_id = "base_link";
                 drive_command.drive.steering_angle = steering_angle;
+                //==========================================================================
+                prev_steering_angle_ = steering_angle;
+                prev_velocity_ = drive_command.drive.speed;
+                //==========================================================================
                 //std::cout << "The speed is commanded is:" << drive_command.drive.speed << "\n";
                 drive_command_publisher.publish(drive_command);
                 //std::cout << "Steering angle commanded is: " << steering_angle << "\n";
             }
+            iterations_of_delay_ = 0;
         } // if(path_detected) block ends here. 
-        else{
-            //std::cout << "No path detected to track.\n";
+        else if(path_detected && (iterations_of_delay_!=iterations_to_delay_)){
+            ackermann_msgs::AckermannDriveStamped drive_command;
+            drive_command.header.stamp = ros::Time::now();
+            drive_command.header.frame_id = "base_link";
+            drive_command.drive.steering_angle = prev_steering_angle_;
+            drive_command.drive.speed = prev_velocity_;
+            iterations_of_delay_ +=1;
+            //std::cout << "No path detected to track, so bye!\n";
         }          
     }
 };
