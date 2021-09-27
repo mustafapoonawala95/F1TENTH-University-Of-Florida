@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pure_pursuit_controller)
+project(modified_pure_pursuit_controller)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,9 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   roscpp
+  rospy
+  std_msgs
   tf2
   tf2_ros
-  ackermann_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -73,7 +74,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   nav_msgs
+#   geometry_msgs#   nav_msgs#   std_msgs
 # )
 
 ################################################
@@ -107,8 +108,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES pure_pursuit_controller
-#  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp tf2 tf2_ros
+#  LIBRARIES modified_pure_pursuit_controller
+#  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy std_msgs tf2 tf2_ros
 #  DEPENDS system_lib
 )
 
@@ -125,7 +126,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/pure_pursuit_controller.cpp
+#   src/${PROJECT_NAME}/modified_pure_pursuit_controller.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -136,8 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-#add_executable(${PROJECT_NAME}_node src/pure_pursuit_controller_node.cpp)
-add_executable(${PROJECT_NAME}_node src/pure_pursuit_controller_node.cpp)
+add_executable(${PROJECT_NAME}_node src/modified_pure_pursuit_controller_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -147,7 +147,7 @@ add_executable(${PROJECT_NAME}_node src/pure_pursuit_controller_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node_with_lingering_lookahead_point ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
@@ -201,7 +201,7 @@ target_link_libraries(${PROJECT_NAME}_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_pure_pursuit_controller.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_modified_pure_pursuit_controller.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
