@@ -337,7 +337,7 @@ class rrt_planner {
         map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
         jump_threshold = 0.5;//30*gridsize;
 
-        inflate_obstacles();
+        //inflate_obstacles();
         for(int i=0;i<(rows_*cols_);i++){                     
             if(map_data_[i]==100){                         //Making all obstacles from the map as visited.
                 obstacles.push_back(i);

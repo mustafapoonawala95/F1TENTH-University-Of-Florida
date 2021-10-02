@@ -182,7 +182,7 @@ class dijkstra_planner {
         std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
         << ", " << map->info.origin.orientation.w << "\n";
         map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
-        inflate_obstacles();
+        //inflate_obstacles();
         //map_data_ = map->data;
         //std::cout << "Inflate obstacles successful.\n";
     }

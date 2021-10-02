@@ -17,7 +17,7 @@ Pure pursuit controller node, subscribes to path planner topic loaded in the par
 
 // A couple of global variables.
 tf2_ros::Buffer tf_buffer;
-
+const float PI = 3.14159;
 class pure_pursuit_controller {
 
     private:
@@ -31,7 +31,7 @@ class pure_pursuit_controller {
     float lookahead_distance_;
     int path_seq_;
     int path_size_;
-    int current_best_waypoint_seq;
+    //int current_best_waypoint_seq;
     float max_steering_angle_ = 0.4189;   
     float mid_speed_;        
     float slowest_speed_;
@@ -81,10 +81,9 @@ class pure_pursuit_controller {
         path_subscriber = node_handle_.subscribe(planner_topic, 1, &pure_pursuit_controller::path_subscriber_callback,this);
         car_pose_subscriber = node_handle_.subscribe("/gt_pose", 1, &pure_pursuit_controller::car_pose_callback,this);
         drive_command_publisher = node_handle_.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 1);
-        // = 0.9;   // 0.9 is optimum for max speed 5.
         path_seq_ = 0;
         ros::Duration(1.0).sleep();// Waiting for 1sec for the tf buffer to fill up so that transforms can be found by lookupTransform().
-        current_best_waypoint_seq = 0;
+        //current_best_waypoint_seq = 0;
         path_detected = false;
         goal_threshold_distance_ = 0.5;
     }
@@ -314,7 +313,7 @@ class pure_pursuit_controller {
                 std::cout << "No intersection between lookahead radius cirlcle and path found.\n";
                 // Since no point of intersection found. Finding the closest point on the path and tracking that.
                 double current_best_waypoint_dist = 999999.00;
-                double current_best_waypoint_seq;
+                int current_best_waypoint_seq;
                 for(int j = path_seq_; j<path_size_; j++){
                     double curr_x = path_to_track_map_frame_.poses[j].pose.position.x;
                     double curr_y = path_to_track_map_frame_.poses[j].pose.position.y;
@@ -353,6 +352,7 @@ class pure_pursuit_controller {
             else{
                 std::cout << "The lookahead distance used is: " << target_point_dist << "\n";
                 float steering_angle = 2*(target_point_y)/(target_point_dist*target_point_dist);
+                //std::cout << "Steering angle: " << steering_angle*(180/PI) << "\n";
                 if(steering_angle > max_steering_angle_){
                     steering_angle = max_steering_angle_;
                     drive_command.drive.speed = slowest_speed_;

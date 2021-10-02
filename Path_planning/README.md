@@ -6,7 +6,8 @@ Currently consists the implementation of the following algorithms.
 3. RRT  
 4. RRT\*  
 5. Pure Pursuit path tracking.  
-6. "Follow the gap" reactive control.  <br/>
+6. "Follow the gap" reactive control.  
+7. Artificial Potential Field Algorithm. <br/>
 
 
 <!-- -->
@@ -127,5 +128,10 @@ RRT: Blue RRT*: Red
 <p float="center">
   <img src="images/A_star_with_pure_pursuit.gif" width="500" height="400"/> 
   <img src="images/follow_the_gap.gif" width="500" height="400"/>
+</p>
+
+## 3) Artificial Potential Field Algorithm.
+<p float="center">
+  <img src="images/apf_test_Berlin.gif" width="750" height="400"/> 
 </p>
 

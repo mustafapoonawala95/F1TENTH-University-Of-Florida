@@ -30,7 +30,7 @@ class follow_the_gap {
     ros::Subscriber scan_subscriber_;
     ros::Publisher drive_command_publisher_;
     float max_steering_angle_ = 0.4189;   
-    std::vector<float> scanned_ranges_;
+    //std::vector<float> scanned_ranges_;
     float scan_angle_min_;
     float scan_angle_max_;
     
@@ -154,7 +154,7 @@ class follow_the_gap {
         node_handle_.getParam("safety_angle_",safety_angle_);  
         node_handle_.getParam("buffer_angle_scaling_factor_",buffer_angle_scaling_factor_);
         scan_subscriber_ = node_handle_.subscribe("/scan", 1, &follow_the_gap::scan_callback,this);
-        drive_command_publisher_ = node_handle_.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 100);
+        drive_command_publisher_ = node_handle_.advertise<ackermann_msgs::AckermannDriveStamped>("/drive", 1);
         ros::Duration(1.0).sleep();// Waiting for 1sec for the tf buffer to fill up so that transforms can be found by lookupTransform().
     }
 

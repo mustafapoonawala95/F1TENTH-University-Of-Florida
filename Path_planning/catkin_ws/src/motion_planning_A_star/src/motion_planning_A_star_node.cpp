@@ -180,7 +180,7 @@ class A_star_planner {
         map_origin_x = map->info.origin.position.x;
         map_origin_y = map->info.origin.position.y;
         map_data_.insert(map_data_.end(), &map->data[0], &map->data[rows_*cols_]);
-        inflate_obstacles();
+        //inflate_obstacles();
         //map_data_ = map->data;
         std::cout << "Map origin x and y are: " << map_origin_x << ", " << map_origin_y <<"\n";
         std::cout << "Map origin orientation is: " << map->info.origin.orientation.x << ", " << map->info.origin.orientation.y << ", " << map->info.origin.orientation.z
