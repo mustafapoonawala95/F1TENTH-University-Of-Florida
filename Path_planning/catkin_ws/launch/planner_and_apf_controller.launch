@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="path_planner" default="A_star" />
+
+
+    <!-- Loading parameters-->
+    <param name="obstacle_influence_distance_" value="3.0"/>
+    <param name="field_of_view_angle_degrees_" value="180.0"/>
+    <param name="lookahead_distance_" value="0.9"/>
+    <param name="R_avoid_factor_" value="0.005"/>   <!--To avoid obstacles aggressively increase R_avoid_factor-->
+    <param name="wheel_base_" value="1.0"/>
+    <param name="do_" value="0.001"/>
+    <param name="K_F_" value="0.0125"/>
+    <param name="K_delta_" value="5"/>
+    <param name="sliding_window_length_" value="5"/>
+    <param name="goal_threshold_distance_" value="0.5"/>
+    <param name="slowest_speed_" value="1"/>
+    <param name="mid_speed_" value="2"/>
+    <param name="max_speed_" value="5"/>
+    <!--Launching the node-->
+    <node name="improved_artificial_potential_field_algorithm_node" pkg="improved_artificial_potential_field_algorithm" type="improved_artificial_potential_field_algorithm_node" output="screen"/>
+    
+    <group if="$(eval arg('path_planner') == 'dijkstra')">
+        <param name="planner_topic_" value="/dijkstra_shortest_path"/>
+        <node pkg="motion_planning_dijkstra" type="motion_planning_dijkstra_node" name="motion_planning_dijkstra_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'A_star')">
+        <param name="planner_topic_" value="/A_star_shortest_path"/>
+        <node name="motion_planning_A_star_node" pkg="motion_planning_A_star" type="motion_planning_A_star_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT')">
+        <param name="planner_topic_" value="/rrt_path"/>
+        <node pkg="motion_planning_RRT" type="motion_planning_RRT_node" name="motion_planning_RRT_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT_star')">
+        <param name="planner_topic_" value="/rrt_star_path"/>
+        <node pkg="motion_planning_RRT_star" type="motion_planning_RRT_star_node" name="motion_planning_RRT_star_node" output="screen"/>
+    </group>
+
+</launch>
