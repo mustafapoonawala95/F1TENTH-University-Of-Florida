@@ -115,7 +115,7 @@ RRT: Blue RRT*: Red
 ## Follow the gap algorithm.
 <p align = "center">
 <img src="images/follow_the_gap.gif" width="850" height="600">
-</p>-->
+</p>sdfsd-->
 
 ## 1) Pure Pursuit. 2) Follow the gap.
 <p float="center">
