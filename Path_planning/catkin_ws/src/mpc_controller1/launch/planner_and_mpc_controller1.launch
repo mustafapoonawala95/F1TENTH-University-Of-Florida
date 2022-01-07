@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+
+
+    <arg name="path_planner" default="dijkstra" />
+
+
+    <!-- Loading MPC parameters-->
+    <param name="wheel_base_" value="0.3302"/>
+    <param name="goal_threshold_distance_" value="0.5"/>
+    <param name="sampling_frequency_" value="5"/>            <!--freq = 1/sampling_time_-->
+    <param name="speed_" value="1.0"/>                   <!--Tested for 0.3-->
+    <param name="Np_" value="30"/>
+    <param name="Nc_" value="30"/>
+    <param name="control_over_error_penalty_" value="0.1"/>  <!--values >1 mean higher focus on reducing control effort than path tracking & vice versa.-->
+    <param name="print_time_info_" value="true"/>
+    <!--Launching the node-->
+    <node name="mpc_controller1_node" pkg="mpc_controller1" type="mpc_controller1_node" output="screen"/>
+    
+    <group if="$(eval arg('path_planner') == 'dijkstra')">
+        <param name="planner_topic_" value="/dijkstra_shortest_path"/>
+        <node pkg="motion_planning_dijkstra" type="motion_planning_dijkstra_node" name="motion_planning_dijkstra_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'A_star')">
+        <param name="planner_topic_" value="/A_star_shortest_path"/>
+        <node name="motion_planning_A_star_node" pkg="motion_planning_A_star" type="motion_planning_A_star_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT')">
+        <param name="planner_topic_" value="/rrt_path"/>
+        <node pkg="motion_planning_RRT" type="motion_planning_RRT_node" name="motion_planning_RRT_node" output="screen"/>
+    </group>
+
+    <group if="$(eval arg('path_planner') == 'RRT_star')">
+        <param name="planner_topic_" value="/rrt_star_path"/>
+        <node pkg="motion_planning_RRT_star" type="motion_planning_RRT_star_node" name="motion_planning_RRT_star_node" output="screen"/>
+    </group>
+
+</launch>

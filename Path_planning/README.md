@@ -7,7 +7,8 @@ Currently consists the implementation of the following algorithms.
 4. RRT\*  
 5. Pure Pursuit path tracking.  
 6. "Follow the gap" reactive control.  
-7. Artificial Potential Field Algorithm. <br/>
+7. Artificial Potential Field Algorithm.  
+8. Linear MPC controller. <br/>
 
 
 <!-- -->
@@ -133,5 +134,9 @@ RRT: Blue RRT*: Red
 ## 3) Artificial Potential Field Algorithm.
 <p float="center">
   <img src="images/apf_test_Berlin.gif" width="750" height="400"/> 
+</p>
+## 4) Linear MPC controller.
+<p float="center">
+  <img src="images/mpc_controller1gif.gif" width="750" height="400"/> 
 </p>
 
