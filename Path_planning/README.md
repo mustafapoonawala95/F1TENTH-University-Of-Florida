@@ -128,6 +128,7 @@ RRT: Blue RRT*: Red
 <p float="center">
   <img src="images/apf_test_Berlin.gif" width="750" height="400"/> 
 </p>
+
 ## 4) Linear MPC controller.
 <p float="center">
   <img src="images/mpc_controller1gif.gif" width="750" height="400"/> 
